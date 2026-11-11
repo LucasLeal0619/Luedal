@@ -1,0 +1,152 @@
+import { useState } from "react";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useCareer } from "@/lib/career-context";
+import { skills, type Evidence } from "@/lib/career";
+import { toast } from "sonner";
+export function EvidenceForm({
+  onClose,
+  existing,
+}: {
+  onClose: () => void;
+  existing?: Evidence | undefined;
+}) {
+  const { data, update } = useCareer();
+  const [form, setForm] = useState<Evidence>(
+    existing ?? {
+      id: crypto.randomUUID(),
+      title: "",
+      type: "Projeto pessoal",
+      description: "",
+      date: "",
+      url: "",
+      skills: [],
+      contribution: "",
+    },
+  );
+  const [busy, setBusy] = useState(false);
+  const field = (key: keyof Evidence, value: string) => setForm((f) => ({ ...f, [key]: value }));
+  return (
+    <div className="detail-overlay">
+      <section
+        className="panel modal"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Registrar evidência"
+      >
+        <div className="section-head">
+          <h2>{existing ? "Editar evidência" : "Nova evidência"}</h2>
+          <Button variant="ghost" size="icon" aria-label="Fechar" onClick={onClose}>
+            <X />
+          </Button>
+        </div>
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            setBusy(true);
+            const evidences = existing
+              ? data.evidences.map((v) => (v.id === form.id ? form : v))
+              : [...data.evidences, form];
+            if (await update({ ...data, evidences })) {
+              toast.success("Evidência salva. Sua rota foi atualizada.");
+              onClose();
+            }
+            setBusy(false);
+          }}
+        >
+          <div className="form-field">
+            <label htmlFor="e-title">Título</label>
+            <input
+              id="e-title"
+              required
+              maxLength={150}
+              value={form.title}
+              onChange={(e) => field("title", e.target.value)}
+            />
+          </div>
+          <div className="grid-2">
+            <div className="form-field">
+              <label htmlFor="e-type">Tipo</label>
+              <select id="e-type" value={form.type} onChange={(e) => field("type", e.target.value)}>
+                {[
+                  "Projeto pessoal",
+                  "Projeto acadêmico",
+                  "Experiência profissional",
+                  "Curso ou certificação",
+                  "Atividade prática",
+                ].map((t) => (
+                  <option key={t}>{t}</option>
+                ))}
+              </select>
+            </div>
+            <div className="form-field">
+              <label htmlFor="e-date">Data</label>
+              <input
+                id="e-date"
+                type="date"
+                value={form.date}
+                onChange={(e) => field("date", e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="form-field">
+            <label htmlFor="e-description">Descrição</label>
+            <textarea
+              id="e-description"
+              required
+              value={form.description}
+              onChange={(e) => field("description", e.target.value)}
+            />
+          </div>
+          <div className="form-field">
+            <label htmlFor="e-url">URL (opcional)</label>
+            <input
+              id="e-url"
+              type="url"
+              value={form.url}
+              onChange={(e) => field("url", e.target.value)}
+              placeholder="https://"
+            />
+          </div>
+          <div className="form-field">
+            <label htmlFor="e-contribution">Sua contribuição e tecnologias utilizadas</label>
+            <textarea
+              id="e-contribution"
+              value={form.contribution}
+              onChange={(e) => field("contribution", e.target.value)}
+            />
+          </div>
+          <label>Competências relacionadas</label>
+          <div className="grid-2">
+            {skills.map((s) => (
+              <label key={s.id} className="flex gap-2 items-center text-xs font-normal">
+                <input
+                  type="checkbox"
+                  checked={form.skills.includes(s.id)}
+                  onChange={(e) =>
+                    setForm((f) => ({
+                      ...f,
+                      skills: e.target.checked
+                        ? [...f.skills, s.id]
+                        : f.skills.filter((id) => id !== s.id),
+                    }))
+                  }
+                />
+                {s.name}
+              </label>
+            ))}
+          </div>
+          <p className="muted text-[11px] mt-4">
+            O registro de uma evidência não equivale à validação técnica de uma competência.
+          </p>
+          <div className="form-actions">
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancelar
+            </Button>
+            <Button disabled={busy}>{busy ? "Salvando…" : "Salvar evidência"}</Button>
+          </div>
+        </form>
+      </section>
+    </div>
+  );
+}

@@ -28,3 +28,10 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Application architecture
+- Keep professional evolution rules and the catalog in a browser-safe domain module, separate from UI and persistence; deterministic recommendations must stay testable without an AI provider.
+- Persist authenticated career aggregates in user-owned Cloud profiles guarded by RLS; keep demonstration state in sessionStorage only and visibly identify it to avoid mixing real and fictional data.
+- Use one shared career context and application shell across distinct file routes; profile changes immediately recompute gaps and career recommendations.
+- Use React Flow for interactive prerequisite graphs rather than a decorative graph implementation.
+- Keep the contextual assistant deterministic and explicitly demonstrative until a secure server-side AI integration is introduced.
