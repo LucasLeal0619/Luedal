@@ -215,7 +215,7 @@ export function Dashboard() {
               <p className="text-[10px] muted">Conecte o que você sabe ao que vem a seguir.</p>
               <div className="skill-preview">
                 <svg
-                  viewBox="0 0 320 230"
+                  viewBox="0 0 320 245"
                   role="img"
                   aria-label="Relações entre JavaScript, Node.js, TypeScript, APIs REST e testes"
                 >
@@ -238,7 +238,7 @@ export function Dashboard() {
                       <text x={x} y={Number(y) + (name === "Node.js" ? 4 : 32)} textAnchor="middle">
                         {name}
                       </text>
-                      {name !== "Testes de integração" && (
+                      {analysis.evidenced.has(({ JavaScript: "javascript", TypeScript: "typescript", "Node.js": "node", "APIs REST": "rest", PostgreSQL: "postgres", "Testes de integração": "integration" } as Record<string, string>)[String(name)] ?? "") && (
                         <circle
                           cx={Number(x) + 13}
                           cy={Number(y) - 12}
@@ -262,11 +262,11 @@ export function Dashboard() {
               <div className="skill-mini-list">
                 <div>
                   <span>Fundamentos & Backend</span>
-                  <span className="tag tag-green">Em evolução</span>
+                  <span className="tag tag-green">{analysis.mapped.some(s => s.category === "Fundamentos" || s.category === "Backend") ? "Em evolução" : "A mapear"}</span>
                 </div>
                 <div>
                   <span>Qualidade & Infraestrutura</span>
-                  <span className="tag tag-purple">Próximo foco</span>
+                  <span className="tag tag-purple">{next?.category === "Qualidade" || next?.category === "Infraestrutura" ? "Próximo foco" : "A explorar"}</span>
                 </div>
               </div>
               <Button asChild variant="outline" className="w-full mt-4 text-xs">
