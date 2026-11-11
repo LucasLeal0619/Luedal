@@ -22,6 +22,7 @@ export function CareerProvider({ children }: { children: ReactNode }) {
     let alive = true;
     const load = async (id: string | null) => {
       if (!alive) return;
+      setLoading(true);
       setUserId(id);
       if (id) {
         setDemo(false);
@@ -77,11 +78,13 @@ export function CareerProvider({ children }: { children: ReactNode }) {
     return true;
   }
   function startDemo() {
+    if (userId) { toast.info("Saia da sua conta para acessar a demonstração separada."); return; }
     setDemo(true);
     setData(demoProfile());
     sessionStorage.setItem("luedal-demo", JSON.stringify(demoProfile()));
   }
   function startEmpty() {
+    if (userId) return;
     setDemo(true);
     setData(emptyProfile());
     sessionStorage.setItem("luedal-demo", JSON.stringify(emptyProfile()));

@@ -75,7 +75,9 @@ export function Dashboard() {
                   <CircleHelp size={12} /> Por que este passo?
                 </strong>
                 <p>
-                  {next && analysis.ready(next)
+                  {next?.prerequisites.length === 0
+                    ? "Esta competência é um fundamento do seu objetivo e não exige pré-requisitos. Comece com uma atividade prática."
+                    : next && analysis.ready(next)
                     ? "Você já declarou familiaridade com os pré-requisitos. Ainda não há evidência registrada desta competência, relevante para seu objetivo."
                     : "Consolide seus fundamentos e registre evidências práticas para construir uma rota alinhada ao seu objetivo."}
                 </p>

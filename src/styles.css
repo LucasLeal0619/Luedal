@@ -1134,6 +1134,17 @@
   }
 }
 @media (max-width: 520px) {
+  .topbar-left { gap: 4px; font-size: 11px; }
+  .topbar-right { gap: 5px; }
+  .topbar-right > button[title="Notificações"] { display: none; }
+  .topbar-right .demo-badge { max-width: 86px; font-size: 8px; padding: 4px 6px; }
+  .topbar { padding-inline: 12px; gap: 7px; }
+  .topbar-right > button { padding-inline: 8px; }
+  .skill-preview { height: 240px; }
+  .public-header .brand { font-size: 20px; }
+  .public-header .brand small { display: none; }
+  .public-header .public-nav { gap: 0; }
+  .public-header .public-nav > a:last-child { display: inline-flex; max-width: 170px; white-space: normal; font-size: 10px; }
   .right-stack {
     display: flex;
   }
