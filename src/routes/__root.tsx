@@ -84,9 +84,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Luedal — Evolução de carreira em tecnologia" },
-      { name: "description", content: "Competências, evidências e uma rota clara para sua evolução em tecnologia." },
+      {
+        name: "description",
+        content: "Competências, evidências e uma rota clara para sua evolução em tecnologia.",
+      },
       { property: "og:title", content: "Luedal — Evolução de carreira em tecnologia" },
-      { property: "og:description", content: "Descubra seu próximo passo profissional com recomendações explicáveis." },
+      {
+        property: "og:description",
+        content: "Descubra seu próximo passo profissional com recomendações explicáveis.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -96,7 +102,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.png", type: "image/png" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&display=swap",
+      },
     ],
   }),
   shellComponent: RootShell,
@@ -125,7 +134,10 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <CareerProvider><Outlet /><Toaster /></CareerProvider>
+      <CareerProvider>
+        <Outlet />
+        <Toaster />
+      </CareerProvider>
     </QueryClientProvider>
   );
 }
