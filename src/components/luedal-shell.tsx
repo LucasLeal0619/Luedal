@@ -17,4 +17,4 @@ export function Assistant({onClose,page}:{onClose:()=>void;page:string}){const {
 }
 export function PageHeading({title,description,children}:{title:string;description:string;children?:ReactNode}){return <div className="page-heading"><div><h1>{title}</h1><p>{description}</p></div>{children}</div>}
 export function PublicHeader(){return <header className="public-header"><Brand/><nav className="public-nav"><Link to="/sobre">Conhecer a Luedal</Link><Link to="/login">Entrar</Link><Button asChild><Link to="/onboarding">Começar minha evolução <ArrowUpRight/></Link></Button></nav></header>}
-export function ThemeControl(){const [light,setLight]=useState(false);return <Button variant="outline" onClick={()=>{setLight(!light);document.documentElement.dataset.theme=light?'dark':'light';}}>{light?<Moon/>:<Sun/>}{light?'Tema escuro':'Tema claro'}</Button>}
+export function ThemeControl(){const [light,setLight]=useState(false);return <Button variant="outline" onClick={()=>{setLight(!light);document.documentElement.dataset['theme']=light?'dark':'light';}}>{light?<Moon/>:<Sun/>}{light?'Tema escuro':'Tema claro'}</Button>}
