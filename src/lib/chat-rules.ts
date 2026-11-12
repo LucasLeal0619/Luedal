@@ -8,6 +8,8 @@ export function profileContext(profile: CareerData, page: string) {
 export function realProfile(value: unknown, name = ""): CareerData {
   const schema = z.object({ name: z.string().max(80).optional(), situation: z.string().max(150).optional(), goal: z.string().max(150).optional(), familiarity: z.record(z.number().min(0).max(4)).optional(), evidences: z.array(z.object({ id: z.string(), title: z.string(), type: z.string(), description: z.string(), date: z.string(), url: z.string(), skills: z.array(z.string()), contribution: z.string() })).max(100).optional(), progress: z.record(z.string()).optional(), onboarded: z.boolean().optional(), learning: z.string().optional() });
   const parsed = schema.safeParse(value);
-  return { ...emptyProfile(), name, ...(parsed.success ? parsed.data : {}) };
+  const base = emptyProfile();
+  if(!parsed.success) return {...base,name};
+  return {name:parsed.data.name ?? name,situation:parsed.data.situation ?? base.situation,goal:parsed.data.goal ?? base.goal,familiarity:parsed.data.familiarity ?? {},evidences:parsed.data.evidences ?? [],progress:parsed.data.progress ?? {},onboarded:parsed.data.onboarded ?? false,learning:parsed.data.learning ?? base.learning};
 }
 export function boundedHistory<T extends {content: string}>(messages: T[]) { let size = 0; return messages.slice(-20).reverse().filter(m => { size += m.content.length; return size <= 24000; }).reverse(); }
