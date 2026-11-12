@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useCareer } from "@/lib/career-context";
 import { analyze, meta } from "@/lib/career";
 import { toast } from "sonner";
-export const Route = createFileRoute("/perfil")({
+export const Route = createFileRoute("/_authenticated/perfil")({
   head: () =>
     meta("Perfil profissional", "Seu objetivo, sua experiência e suas preferências de evolução."),
   component: Profile,

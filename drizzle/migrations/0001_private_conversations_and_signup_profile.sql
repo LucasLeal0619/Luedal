@@ -1,0 +1,17 @@
+CREATE OR REPLACE FUNCTION public.create_signup_profile() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$ BEGIN INSERT INTO public.profiles(id, career_data) VALUES (NEW.id, jsonb_build_object('name', left(coalesce(NEW.raw_user_meta_data->>'full_name', ''),80), 'onboarded', false)) ON CONFLICT (id) DO NOTHING; RETURN NEW; END; $$;
+CREATE TRIGGER luedal_signup_profile AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION public.create_signup_profile();
+CREATE TABLE public.ai_conversations (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), user_id uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE, title text NOT NULL DEFAULT 'Nova conversa', created_at timestamptz NOT NULL DEFAULT now());
+GRANT SELECT, INSERT, DELETE ON public.ai_conversations TO authenticated; GRANT ALL ON public.ai_conversations TO service_role;
+ALTER TABLE public.ai_conversations ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Own conversations" ON public.ai_conversations FOR ALL TO authenticated USING (user_id = (SELECT auth.uid())) WITH CHECK (user_id = (SELECT auth.uid()));
+CREATE TABLE public.ai_messages (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), conversation_id uuid NOT NULL REFERENCES public.ai_conversations(id) ON DELETE CASCADE, user_id uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE, role text NOT NULL CHECK (role IN ('user', 'assistant')), content text NOT NULL CHECK (char_length(content) BETWEEN 1 AND 12000), created_at timestamptz NOT NULL DEFAULT now());
+GRANT SELECT, INSERT ON public.ai_messages TO authenticated; GRANT ALL ON public.ai_messages TO service_role;
+ALTER TABLE public.ai_messages ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Own conversation messages" ON public.ai_messages FOR ALL TO authenticated USING (user_id = (SELECT auth.uid())) WITH CHECK (user_id = (SELECT auth.uid()) AND EXISTS (SELECT 1 FROM public.ai_conversations c WHERE c.id = conversation_id AND c.user_id = (SELECT auth.uid())));
+CREATE INDEX ai_messages_history ON public.ai_messages(conversation_id, created_at);
+CREATE TABLE public.ai_usage (user_id uuid PRIMARY KEY REFERENCES public.profiles(id) ON DELETE CASCADE, window_start timestamptz NOT NULL DEFAULT now(), requests integer NOT NULL DEFAULT 0);
+GRANT SELECT, INSERT, UPDATE ON public.ai_usage TO authenticated; GRANT ALL ON public.ai_usage TO service_role;
+ALTER TABLE public.ai_usage ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Read own usage" ON public.ai_usage FOR SELECT TO authenticated USING (user_id = (SELECT auth.uid()));
+CREATE FUNCTION public.consume_ai_request() RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$ DECLARE accepted boolean; BEGIN IF auth.uid() IS NULL THEN RETURN false; END IF; INSERT INTO public.ai_usage(user_id,requests) VALUES(auth.uid(),1) ON CONFLICT(user_id) DO UPDATE SET requests = CASE WHEN ai_usage.window_start < now() - interval '1 hour' THEN 1 ELSE ai_usage.requests + 1 END, window_start = CASE WHEN ai_usage.window_start < now() - interval '1 hour' THEN now() ELSE ai_usage.window_start END WHERE ai_usage.window_start < now() - interval '1 hour' OR ai_usage.requests < 30 RETURNING true INTO accepted; RETURN coalesce(accepted,false); END; $$;
+REVOKE ALL ON FUNCTION public.consume_ai_request() FROM PUBLIC; GRANT EXECUTE ON FUNCTION public.consume_ai_request() TO authenticated;

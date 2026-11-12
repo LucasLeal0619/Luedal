@@ -1,11 +1,11 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, ArrowLeft, Target, Check, Plus } from "lucide-react";
 import { Brand } from "@/components/luedal-shell";
 import { Button } from "@/components/ui/button";
 import { useCareer } from "@/lib/career-context";
 import { skills, levels, analyze, meta } from "@/lib/career";
-export const Route = createFileRoute("/onboarding")({
+export const Route = createFileRoute("/_authenticated/onboarding")({
   head: () =>
     meta(
       "Começar minha evolução",
@@ -21,12 +21,13 @@ const situations = [
   "Em transição de carreira",
 ];
 function Onboarding() {
-  const { data, update, demo, startEmpty } = useCareer();
+  const { data, update, demo, startEmpty, loading } = useCareer();
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState(data);
   const [project, setProject] = useState("");
   const [busy, setBusy] = useState(false);
+  useEffect(() => {if(!loading && step===0) setForm(data);},[loading,data]);
   async function next() {
     if (step === 4) {
       setBusy(true);

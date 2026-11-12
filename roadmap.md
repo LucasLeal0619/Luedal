@@ -6,4 +6,7 @@
 - [x] Contextual demonstration assistant, preferences and empty/loading/error states.
 - [x] Domain tests and demonstration desktop/mobile end-to-end checks.
 - [ ] Verify authenticated profile save/read end-to-end — blocked: no signed-up account exists yet.
+- [ ] Complete signup, login, recovery, session isolation and private-page protection.
+- [ ] Introduce authenticated conversational AI with private history, bounded context and explicit failures.
+- [ ] Validate authentication and AI with real profile inputs, automated tests and desktop/mobile checks.
 - [ ] Definitive legal policies — blocked: company identity, contact information and reviewed legal content not supplied.

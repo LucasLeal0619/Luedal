@@ -17,14 +17,15 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Shell, PageHeading, Assistant } from "./luedal-shell";
+import { Shell, PageHeading } from "./luedal-shell";
+import { useAssistant } from "./conversational-assistant";
 import { useCareer } from "@/lib/career-context";
 import { analyze } from "@/lib/career";
 export function Dashboard() {
-  const { data } = useCareer();
+  const { data, demo } = useCareer();
   const analysis = analyze(data);
   const next = analysis.recommendations[0];
-  const [ai, setAi] = useState(false);
+  const {open: openAssistant} = useAssistant();
   return (
     <Shell title="Dashboard">
       <main className="page">
@@ -284,11 +285,11 @@ export function Dashboard() {
                 Entenda suas competências, explore sua rota e descubra o motivo de cada
                 recomendação.
               </p>
-              <Button variant="outline" className="w-full text-xs" onClick={() => setAi(true)}>
+              <Button variant="outline" className="w-full text-xs" onClick={openAssistant}>
                 Conversar com a Luedal AI <ArrowUpRight />
               </Button>
               <p className="text-[9px] mb-0 mt-3">
-                Assistente demonstrativo · baseado no seu perfil
+                {demo ? "Entre para conversar com seu perfil privado" : "Conversa conectada ao seu perfil"}
               </p>
             </section>
             <div className="px-2">
@@ -307,7 +308,6 @@ export function Dashboard() {
           está no controle da sua evolução.
         </footer>
       </main>
-      {ai && <Assistant onClose={() => setAi(false)} page="Dashboard" />}
     </Shell>
   );
 }

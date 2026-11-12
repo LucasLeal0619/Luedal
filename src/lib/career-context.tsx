@@ -2,6 +2,9 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import { supabase } from "@/integrations/supabase/client";
 import { demoProfile, emptyProfile, type CareerData } from "./career";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "@tanstack/react-router";
+import { realProfile } from "./chat-rules";
 type Store = {
   data: CareerData;
   demo: boolean;
@@ -14,16 +17,21 @@ type Store = {
 };
 const Context = createContext<Store | null>(null);
 export function CareerProvider({ children }: { children: ReactNode }) {
-  const [data, setData] = useState<CareerData>(demoProfile);
-  const [demo, setDemo] = useState(true);
+  const [data, setData] = useState<CareerData>(emptyProfile);
+  const [demo, setDemo] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+  const router = useRouter();
   useEffect(() => {
     let alive = true;
+    let version = 0;
     const load = async (id: string | null) => {
       if (!alive) return;
+      const current = ++version;
       setLoading(true);
       setUserId(id);
+      setData(emptyProfile());
       if (id) {
         setDemo(false);
         const { data: row, error } = await supabase
@@ -31,15 +39,15 @@ export function CareerProvider({ children }: { children: ReactNode }) {
           .select("career_data")
           .eq("id", id)
           .maybeSingle();
-        if (!alive) return;
+        if (!alive || current !== version) return;
         if (error) toast.error("Não foi possível carregar seu perfil.");
-        setData(row ? { ...emptyProfile(), ...(row.career_data as object) } : emptyProfile());
+        setData(realProfile(row?.career_data));
       } else {
-        setDemo(true);
         const saved = sessionStorage.getItem("luedal-demo");
+        setDemo(Boolean(saved));
         if (saved) {
           try {
-            setData(JSON.parse(saved));
+            setData(realProfile(JSON.parse(saved)));
           } catch {
             setData(demoProfile());
           }
@@ -47,15 +55,21 @@ export function CareerProvider({ children }: { children: ReactNode }) {
       }
       setLoading(false);
     };
-    supabase.auth.getSession().then(({ data }) => load(data.session?.user.id ?? null));
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      void load(session?.user.id ?? null);
+    supabase.auth.getUser().then(({ data }) => load(data.user?.id ?? null));
+    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+      if(event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED" && event !== "PASSWORD_RECOVERY") return;
+      if(event === "PASSWORD_RECOVERY") sessionStorage.setItem("luedal-recovery",session?.user.id ?? "");
+      queueMicrotask(async () => {
+        await load(session?.user.id ?? null);
+        if(event !== "PASSWORD_RECOVERY") void router.invalidate();
+        if(event !== "SIGNED_OUT") void queryClient.invalidateQueries();
+      });
     });
     return () => {
       alive = false;
       listener.subscription.unsubscribe();
     };
-  }, []);
+  }, [queryClient,router]);
   async function update(next: CareerData) {
     if (demo) {
       sessionStorage.setItem("luedal-demo", JSON.stringify(next));
@@ -100,10 +114,14 @@ export function CareerProvider({ children }: { children: ReactNode }) {
         startDemo,
         startEmpty,
         logout: async () => {
+          await queryClient.cancelQueries();
+          queryClient.clear();
           await supabase.auth.signOut();
           sessionStorage.removeItem("luedal-demo");
-          setData(demoProfile());
-          setDemo(true);
+          sessionStorage.removeItem("luedal-recovery");
+          setData(emptyProfile());
+          setDemo(false);
+          setUserId(null);
         },
       }}
     >

@@ -22,7 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import symbol from "@/assets/luedal-symbol.png.asset.json";
 import { useCareer } from "@/lib/career-context";
-import { analyze, explain, skills } from "@/lib/career";
+import { useAssistant } from "./conversational-assistant";
 export function Brand() {
   return (
     <Link to="/" className="brand">
@@ -43,7 +43,7 @@ export function Shell({ children, title }: { children: ReactNode; title: string 
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [mobile, setMobile] = useState(false);
-  const [ai, setAi] = useState(false);
+  const { open: openAssistant } = useAssistant();
   return (
     <div className={`app-shell ${collapsed ? "is-collapsed" : ""}`}>
       <aside className={`sidebar ${collapsed ? "collapsed" : ""} ${mobile ? "mobile-open" : ""}`}>
@@ -69,7 +69,7 @@ export function Shell({ children, title }: { children: ReactNode; title: string 
           <span>Perfil profissional</span>
         </Link>
         <p className="nav-heading">ASSISTÊNCIA</p>
-        <Button variant="ghost" className="nav-item" onClick={() => setAi(true)}>
+        <Button variant="ghost" className="nav-item" onClick={() => openAssistant()}>
           <Sparkles />
           <span>Luedal AI</span>
           <span className="tag tag-purple">BETA</span>
@@ -128,10 +128,10 @@ export function Shell({ children, title }: { children: ReactNode; title: string 
         </div>
         <div className="topbar-right">
           {demo && <span className="demo-badge">Ambiente demonstrativo</span>}
-          <Button variant="ghost" size="icon" title="Notificações" onClick={() => setAi(true)}>
+          <Button variant="ghost" size="icon" title="Notificações" onClick={() => openAssistant()}>
             <Bell size={16} />
           </Button>
-          <Button variant="outline" onClick={() => setAi(true)}>
+          <Button variant="outline" onClick={() => openAssistant()}>
             <Sparkles className="text-primary" />
             Luedal AI
           </Button>
@@ -145,91 +145,7 @@ export function Shell({ children, title }: { children: ReactNode; title: string 
       ) : (
         children
       )}
-      {ai && <Assistant onClose={() => setAi(false)} page={title} />}
     </div>
-  );
-}
-export function Assistant({ onClose, page }: { onClose: () => void; page: string }) {
-  const { data } = useCareer();
-  const [messages, setMessages] = useState<{ user: boolean; text: string }[]>([]);
-  const [input, setInput] = useState("");
-  const [busy, setBusy] = useState(false);
-  const recommendation = analyze(data).recommendations[0];
-  function ask(text: string) {
-    if (!text.trim()) return;
-    setInput("");
-    setBusy(true);
-    setMessages((m) => [...m, { user: true, text }]);
-    const mentioned = skills.find((s) => text.toLowerCase().includes(s.name.toLowerCase()));
-    const selected = mentioned ?? recommendation;
-    const reply = selected
-      ? `${explain(selected, data)} Atividade sugerida: ${selected.activity}`
-      : "Sua rota está atualizada. Registre novas evidências para complementar seu perfil.";
-    setTimeout(() => {
-      setMessages((m) => [...m, { user: false, text: reply }]);
-      setBusy(false);
-    }, 350);
-  }
-  return (
-    <aside className="ai-panel" aria-label="Luedal AI">
-      <div className="ai-head">
-        <div>
-          <h2 className="panel-title">
-            <Sparkles className="text-primary" />
-            Luedal AI
-          </h2>
-          <p className="text-[10px] muted mt-2">Demonstração · respostas por regras · {page}</p>
-        </div>
-        <Button variant="ghost" size="icon" aria-label="Fechar assistente" onClick={onClose}>
-          <X />
-        </Button>
-      </div>
-      <div className="ai-messages">
-        <div className="chat-bubble">
-          Olá, {data.name || "bem-vindo"}! Vamos entender seu próximo passo? Minhas explicações usam
-          as competências e evidências deste perfil.
-        </div>
-        {[
-          "Por que esse é meu próximo passo?",
-          "O que preciso aprender antes de Docker?",
-          "Quais competências precisam de evidências?",
-        ].map((q) => (
-          <Button
-            key={q}
-            variant="outline"
-            className="whitespace-normal text-left h-auto py-3 text-xs justify-start"
-            onClick={() => ask(q)}
-            disabled={busy}
-          >
-            {q}
-            <ArrowUpRight className="ml-auto" />
-          </Button>
-        ))}
-        {messages.map((m, i) => (
-          <div className={`chat-bubble ${m.user ? "user-message" : ""}`} key={i}>
-            {m.text}
-          </div>
-        ))}
-        {busy && <p className="muted text-xs">Preparando explicação…</p>}
-      </div>
-      <form
-        className="ai-form"
-        onSubmit={(e) => {
-          e.preventDefault();
-          ask(input);
-        }}
-      >
-        <input
-          aria-label="Mensagem para Luedal AI"
-          placeholder="Pergunte sobre sua evolução…"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <Button size="icon" aria-label="Enviar mensagem" disabled={busy || !input.trim()}>
-          <Send />
-        </Button>
-      </form>
-    </aside>
   );
 }
 export function PageHeading({
@@ -252,12 +168,13 @@ export function PageHeading({
   );
 }
 export function PublicHeader() {
+  const { userId, data, logout } = useCareer();
   return (
     <header className="public-header">
       <Brand />
       <nav className="public-nav">
         <Link to="/sobre">Conhecer a Luedal</Link>
-        <Link to="/login">Entrar</Link>
+        {userId ? <><Link to={data.onboarded ? "/dashboard" : "/onboarding"}>Minha conta</Link><Button variant="ghost" onClick={() => void logout()}>Sair</Button></> : <Link to="/login">Entrar</Link>}
         <Button asChild>
           <Link to="/onboarding">
             Começar minha evolução <ArrowUpRight />
