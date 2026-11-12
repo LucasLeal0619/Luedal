@@ -10,68 +10,28 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as CompetenciasRouteImport } from './routes/competencias'
-import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as EvidenciasRouteImport } from './routes/evidencias'
-import { Route as LacunasRouteImport } from './routes/lacunas'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as MinhaRotaRouteImport } from './routes/minha-rota'
-import { Route as OnboardingRouteImport } from './routes/onboarding'
-import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as RedefinirSenhaRouteImport } from './routes/redefinir-senha'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as TermosRouteImport } from './routes/termos'
+import { Route as AuthenticatedCompetenciasRouteImport } from './routes/_authenticated/competencias'
+import { Route as AuthenticatedConfiguracoesRouteImport } from './routes/_authenticated/configuracoes'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedEvidenciasRouteImport } from './routes/_authenticated/evidencias'
+import { Route as AuthenticatedLacunasRouteImport } from './routes/_authenticated/lacunas'
+import { Route as AuthenticatedMinhaRotaRouteImport } from './routes/_authenticated/minha-rota'
+import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
+import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CompetenciasRoute = CompetenciasRouteImport.update({
-  id: '/competencias',
-  path: '/competencias',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
-  id: '/configuracoes',
-  path: '/configuracoes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EvidenciasRoute = EvidenciasRouteImport.update({
-  id: '/evidencias',
-  path: '/evidencias',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LacunasRoute = LacunasRouteImport.update({
-  id: '/lacunas',
-  path: '/lacunas',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MinhaRotaRoute = MinhaRotaRouteImport.update({
-  id: '/minha-rota',
-  path: '/minha-rota',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OnboardingRoute = OnboardingRouteImport.update({
-  id: '/onboarding',
-  path: '/onboarding',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PerfilRoute = PerfilRouteImport.update({
-  id: '/perfil',
-  path: '/perfil',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacidadeRoute = PrivacidadeRouteImport.update({
@@ -94,122 +54,164 @@ const TermosRoute = TermosRouteImport.update({
   path: '/termos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedCompetenciasRoute =
+  AuthenticatedCompetenciasRouteImport.update({
+    id: '/_authenticated/competencias',
+    path: '/competencias',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedConfiguracoesRoute =
+  AuthenticatedConfiguracoesRouteImport.update({
+    id: '/_authenticated/configuracoes',
+    path: '/configuracoes',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/_authenticated/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedEvidenciasRoute = AuthenticatedEvidenciasRouteImport.update({
+  id: '/_authenticated/evidencias',
+  path: '/evidencias',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedLacunasRoute = AuthenticatedLacunasRouteImport.update({
+  id: '/_authenticated/lacunas',
+  path: '/lacunas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedMinhaRotaRoute = AuthenticatedMinhaRotaRouteImport.update({
+  id: '/_authenticated/minha-rota',
+  path: '/minha-rota',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
+  id: '/_authenticated/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedPerfilRoute = AuthenticatedPerfilRouteImport.update({
+  id: '/_authenticated/perfil',
+  path: '/perfil',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/competencias': typeof CompetenciasRoute
-  '/configuracoes': typeof ConfiguracoesRoute
-  '/dashboard': typeof DashboardRoute
-  '/evidencias': typeof EvidenciasRoute
-  '/lacunas': typeof LacunasRoute
   '/login': typeof LoginRoute
-  '/minha-rota': typeof MinhaRotaRoute
-  '/onboarding': typeof OnboardingRoute
-  '/perfil': typeof PerfilRoute
   '/privacidade': typeof PrivacidadeRoute
   '/redefinir-senha': typeof RedefinirSenhaRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/competencias': typeof AuthenticatedCompetenciasRoute
+  '/configuracoes': typeof AuthenticatedConfiguracoesRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/evidencias': typeof AuthenticatedEvidenciasRoute
+  '/lacunas': typeof AuthenticatedLacunasRoute
+  '/minha-rota': typeof AuthenticatedMinhaRotaRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/perfil': typeof AuthenticatedPerfilRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/competencias': typeof CompetenciasRoute
-  '/configuracoes': typeof ConfiguracoesRoute
-  '/dashboard': typeof DashboardRoute
-  '/evidencias': typeof EvidenciasRoute
-  '/lacunas': typeof LacunasRoute
   '/login': typeof LoginRoute
-  '/minha-rota': typeof MinhaRotaRoute
-  '/onboarding': typeof OnboardingRoute
-  '/perfil': typeof PerfilRoute
   '/privacidade': typeof PrivacidadeRoute
   '/redefinir-senha': typeof RedefinirSenhaRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/competencias': typeof AuthenticatedCompetenciasRoute
+  '/configuracoes': typeof AuthenticatedConfiguracoesRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/evidencias': typeof AuthenticatedEvidenciasRoute
+  '/lacunas': typeof AuthenticatedLacunasRoute
+  '/minha-rota': typeof AuthenticatedMinhaRotaRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/perfil': typeof AuthenticatedPerfilRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/competencias': typeof CompetenciasRoute
-  '/configuracoes': typeof ConfiguracoesRoute
-  '/dashboard': typeof DashboardRoute
-  '/evidencias': typeof EvidenciasRoute
-  '/lacunas': typeof LacunasRoute
   '/login': typeof LoginRoute
-  '/minha-rota': typeof MinhaRotaRoute
-  '/onboarding': typeof OnboardingRoute
-  '/perfil': typeof PerfilRoute
   '/privacidade': typeof PrivacidadeRoute
   '/redefinir-senha': typeof RedefinirSenhaRoute
   '/sobre': typeof SobreRoute
   '/termos': typeof TermosRoute
+  '/_authenticated/competencias': typeof AuthenticatedCompetenciasRoute
+  '/_authenticated/configuracoes': typeof AuthenticatedConfiguracoesRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/evidencias': typeof AuthenticatedEvidenciasRoute
+  '/_authenticated/lacunas': typeof AuthenticatedLacunasRoute
+  '/_authenticated/minha-rota': typeof AuthenticatedMinhaRotaRoute
+  '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
+  '/_authenticated/perfil': typeof AuthenticatedPerfilRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/login'
+    | '/privacidade'
+    | '/redefinir-senha'
+    | '/sobre'
+    | '/termos'
     | '/competencias'
     | '/configuracoes'
     | '/dashboard'
     | '/evidencias'
     | '/lacunas'
-    | '/login'
     | '/minha-rota'
     | '/onboarding'
     | '/perfil'
-    | '/privacidade'
-    | '/redefinir-senha'
-    | '/sobre'
-    | '/termos'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/login'
+    | '/privacidade'
+    | '/redefinir-senha'
+    | '/sobre'
+    | '/termos'
     | '/competencias'
     | '/configuracoes'
     | '/dashboard'
     | '/evidencias'
     | '/lacunas'
-    | '/login'
     | '/minha-rota'
     | '/onboarding'
     | '/perfil'
-    | '/privacidade'
-    | '/redefinir-senha'
-    | '/sobre'
-    | '/termos'
   id:
     | '__root__'
     | '/'
-    | '/competencias'
-    | '/configuracoes'
-    | '/dashboard'
-    | '/evidencias'
-    | '/lacunas'
     | '/login'
-    | '/minha-rota'
-    | '/onboarding'
-    | '/perfil'
     | '/privacidade'
     | '/redefinir-senha'
     | '/sobre'
     | '/termos'
+    | '/_authenticated/competencias'
+    | '/_authenticated/configuracoes'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/evidencias'
+    | '/_authenticated/lacunas'
+    | '/_authenticated/minha-rota'
+    | '/_authenticated/onboarding'
+    | '/_authenticated/perfil'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CompetenciasRoute: typeof CompetenciasRoute
-  ConfiguracoesRoute: typeof ConfiguracoesRoute
-  DashboardRoute: typeof DashboardRoute
-  EvidenciasRoute: typeof EvidenciasRoute
-  LacunasRoute: typeof LacunasRoute
   LoginRoute: typeof LoginRoute
-  MinhaRotaRoute: typeof MinhaRotaRoute
-  OnboardingRoute: typeof OnboardingRoute
-  PerfilRoute: typeof PerfilRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   RedefinirSenhaRoute: typeof RedefinirSenhaRoute
   SobreRoute: typeof SobreRoute
   TermosRoute: typeof TermosRoute
+  AuthenticatedCompetenciasRoute: typeof AuthenticatedCompetenciasRoute
+  AuthenticatedConfiguracoesRoute: typeof AuthenticatedConfiguracoesRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedEvidenciasRoute: typeof AuthenticatedEvidenciasRoute
+  AuthenticatedLacunasRoute: typeof AuthenticatedLacunasRoute
+  AuthenticatedMinhaRotaRoute: typeof AuthenticatedMinhaRotaRoute
+  AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
+  AuthenticatedPerfilRoute: typeof AuthenticatedPerfilRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -221,67 +223,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/competencias': {
-      id: '/competencias'
-      path: '/competencias'
-      fullPath: '/competencias'
-      preLoaderRoute: typeof CompetenciasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/configuracoes': {
-      id: '/configuracoes'
-      path: '/configuracoes'
-      fullPath: '/configuracoes'
-      preLoaderRoute: typeof ConfiguracoesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/evidencias': {
-      id: '/evidencias'
-      path: '/evidencias'
-      fullPath: '/evidencias'
-      preLoaderRoute: typeof EvidenciasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lacunas': {
-      id: '/lacunas'
-      path: '/lacunas'
-      fullPath: '/lacunas'
-      preLoaderRoute: typeof LacunasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/minha-rota': {
-      id: '/minha-rota'
-      path: '/minha-rota'
-      fullPath: '/minha-rota'
-      preLoaderRoute: typeof MinhaRotaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/onboarding': {
-      id: '/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof OnboardingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/perfil': {
-      id: '/perfil'
-      path: '/perfil'
-      fullPath: '/perfil'
-      preLoaderRoute: typeof PerfilRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacidade': {
@@ -312,24 +258,80 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/competencias': {
+      id: '/_authenticated/competencias'
+      path: '/competencias'
+      fullPath: '/competencias'
+      preLoaderRoute: typeof AuthenticatedCompetenciasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/configuracoes': {
+      id: '/_authenticated/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof AuthenticatedConfiguracoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/evidencias': {
+      id: '/_authenticated/evidencias'
+      path: '/evidencias'
+      fullPath: '/evidencias'
+      preLoaderRoute: typeof AuthenticatedEvidenciasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/lacunas': {
+      id: '/_authenticated/lacunas'
+      path: '/lacunas'
+      fullPath: '/lacunas'
+      preLoaderRoute: typeof AuthenticatedLacunasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/minha-rota': {
+      id: '/_authenticated/minha-rota'
+      path: '/minha-rota'
+      fullPath: '/minha-rota'
+      preLoaderRoute: typeof AuthenticatedMinhaRotaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/onboarding': {
+      id: '/_authenticated/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/perfil': {
+      id: '/_authenticated/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof AuthenticatedPerfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CompetenciasRoute: CompetenciasRoute,
-  ConfiguracoesRoute: ConfiguracoesRoute,
-  DashboardRoute: DashboardRoute,
-  EvidenciasRoute: EvidenciasRoute,
-  LacunasRoute: LacunasRoute,
   LoginRoute: LoginRoute,
-  MinhaRotaRoute: MinhaRotaRoute,
-  OnboardingRoute: OnboardingRoute,
-  PerfilRoute: PerfilRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   RedefinirSenhaRoute: RedefinirSenhaRoute,
   SobreRoute: SobreRoute,
   TermosRoute: TermosRoute,
+  AuthenticatedCompetenciasRoute: AuthenticatedCompetenciasRoute,
+  AuthenticatedConfiguracoesRoute: AuthenticatedConfiguracoesRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedEvidenciasRoute: AuthenticatedEvidenciasRoute,
+  AuthenticatedLacunasRoute: AuthenticatedLacunasRoute,
+  AuthenticatedMinhaRotaRoute: AuthenticatedMinhaRotaRoute,
+  AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
+  AuthenticatedPerfilRoute: AuthenticatedPerfilRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
