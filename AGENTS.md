@@ -34,4 +34,6 @@ use the editor.
 - Persist authenticated career aggregates in user-owned Cloud profiles guarded by RLS; keep demonstration state in sessionStorage only and visibly identify it to avoid mixing real and fictional data.
 - Use one shared career context and application shell across distinct file routes; profile changes immediately recompute gaps and career recommendations.
 - Use React Flow for interactive prerequisite graphs rather than a decorative graph implementation.
-- Keep the contextual assistant deterministic and explicitly demonstrative until a secure server-side AI integration is introduced.
+- Keep conversational inference in authenticated server functions through the AI Gateway; read context and bounded history with user-scoped RLS, never accept profile identity from the browser.
+- Mount the assistant in the root career provider so navigation preserves conversations; demo mode cannot invoke private inference.
+- Gate workspace pages in the client-only authenticated layout; only explicit session-scoped demonstration may bypass sign-in, without access to private server functions.

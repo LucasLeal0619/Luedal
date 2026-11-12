@@ -14,6 +14,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CareerProvider } from "@/lib/career-context";
 import { Toaster } from "@/components/ui/sonner";
+import { AssistantProvider } from "@/components/conversational-assistant";
 
 function NotFoundComponent() {
   return (
@@ -135,8 +136,10 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <CareerProvider>
+        <AssistantProvider>
         <Outlet />
         <Toaster />
+        </AssistantProvider>
       </CareerProvider>
     </QueryClientProvider>
   );
