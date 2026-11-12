@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useCareer } from "@/lib/career-context";
 import { skills, meta, type Evidence } from "@/lib/career";
 import { toast } from "sonner";
-export const Route = createFileRoute("/evidencias")({
+export const Route = createFileRoute("/_authenticated/evidencias")({
   head: () =>
     meta(
       "Evidências profissionais",

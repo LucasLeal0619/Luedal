@@ -4,7 +4,7 @@ import { Shell, PageHeading } from "@/components/luedal-shell";
 import { useCareer } from "@/lib/career-context";
 import { analyze, explain, meta } from "@/lib/career";
 import { Button } from "@/components/ui/button";
-export const Route = createFileRoute("/lacunas")({
+export const Route = createFileRoute("/_authenticated/lacunas")({
   head: () =>
     meta(
       "Diagnóstico de lacunas",

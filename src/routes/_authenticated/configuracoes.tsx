@@ -5,7 +5,7 @@ import { Shell, PageHeading, ThemeControl } from "@/components/luedal-shell";
 import { useCareer } from "@/lib/career-context";
 import { meta } from "@/lib/career";
 import { Button } from "@/components/ui/button";
-export const Route = createFileRoute("/configuracoes")({
+export const Route = createFileRoute("/_authenticated/configuracoes")({
   head: () =>
     meta("Configurações", "Preferências, aparência e controle sobre seu perfil profissional."),
   component: Settings,
@@ -69,7 +69,7 @@ function Settings() {
                 variant="outline"
                 onClick={async () => {
                   await logout();
-                  await nav({ to: "/login" });
+                  await nav({ to: "/login", replace: true });
                 }}
               >
                 <LogOut />

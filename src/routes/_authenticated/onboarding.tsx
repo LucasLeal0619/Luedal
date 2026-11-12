@@ -5,7 +5,7 @@ import { Brand } from "@/components/luedal-shell";
 import { Button } from "@/components/ui/button";
 import { useCareer } from "@/lib/career-context";
 import { skills, levels, analyze, meta } from "@/lib/career";
-export const Route = createFileRoute("/onboarding")({
+export const Route = createFileRoute("/_authenticated/onboarding")({
   head: () =>
     meta(
       "Começar minha evolução",

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { analyze, explain, skills, meta } from "@/lib/career";
 import { useCareer } from "@/lib/career-context";
 import { toast } from "sonner";
-export const Route = createFileRoute("/minha-rota")({
+export const Route = createFileRoute("/_authenticated/minha-rota")({
   head: () =>
     meta(
       "Minha rota",

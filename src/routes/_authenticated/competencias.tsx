@@ -6,7 +6,7 @@ import { Shell, PageHeading } from "@/components/luedal-shell";
 import { Button } from "@/components/ui/button";
 import { useCareer } from "@/lib/career-context";
 import { skills, analyze, levels, meta, type Skill } from "@/lib/career";
-export const Route = createFileRoute("/competencias")({
+export const Route = createFileRoute("/_authenticated/competencias")({
   head: () =>
     meta(
       "Competências e Skill Graph",
