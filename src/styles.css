@@ -1196,3 +1196,21 @@
     scroll-behavior: auto !important;
   }
 }
+
+.chat-suggestions { display: flex; flex-direction: column; gap: 10px; }
+.chat-history { display: flex; flex-direction: column; gap: 5px; max-height: 230px; overflow: auto; padding: 12px; border-bottom: 1px solid var(--border); }
+.ai-messages { min-height: 0; }
+.ai-form { align-items: flex-end; }
+.ai-form textarea { min-width: 0; min-height: 54px; max-height: 160px; resize: none; font-size: 12px; }
+.chat-bubble { overflow-wrap: anywhere; }
+.chat-bubble.user-message { margin-left: 28px; }
+.chat-markdown p + p, .chat-markdown ul, .chat-markdown ol { margin-top: 10px; }
+.chat-markdown ul, .chat-markdown ol { padding-left: 20px; }
+.chat-markdown ul { list-style: disc; }
+.chat-markdown ol { list-style: decimal; }
+.chat-markdown pre { overflow-x: auto; background: var(--background); padding: 12px; border-radius: 6px; margin-block: 10px; }
+.chat-markdown code { font-family: monospace; font-size: 11px; }
+.chat-markdown a { color: var(--cyan); text-decoration: underline; }
+.chat-markdown table { display: block; overflow: auto; }
+.chat-markdown td, .chat-markdown th { border: 1px solid var(--border); padding: 5px; }
+@media (prefers-reduced-motion: reduce) { .ai-panel { animation: none; } }
