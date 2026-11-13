@@ -1,6 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { LogOut, Download, RotateCcw } from "lucide-react";
-import { useState } from "react";
+import { LogOut, Download } from "lucide-react";
 import { Shell, PageHeading, ThemeControl } from "@/components/luedal-shell";
 import { useCareer } from "@/lib/career-context";
 import { meta } from "@/lib/career";
@@ -11,9 +10,8 @@ export const Route = createFileRoute("/_authenticated/configuracoes")({
   component: Settings,
 });
 function Settings() {
-  const { demo, data, startDemo, logout } = useCareer();
+  const { data, logout } = useCareer();
   const nav = useNavigate();
-  const [reset, setReset] = useState(false);
   return (
     <Shell title="Configurações">
       <main className="page">
@@ -48,18 +46,6 @@ function Settings() {
               Exportar
             </Button>
           </div>
-          {demo ? (
-            <div className="settings-row">
-              <div>
-                <h3>Ambiente demonstrativo</h3>
-                <p>Dados deste ambiente ficam somente nesta sessão do navegador.</p>
-              </div>
-              <Button variant="outline" onClick={() => setReset(true)}>
-                <RotateCcw />
-                Restaurar demo
-              </Button>
-            </div>
-          ) : (
             <div className="settings-row">
               <div>
                 <h3>Sua conta</h3>
@@ -76,7 +62,6 @@ function Settings() {
                 Sair
               </Button>
             </div>
-          )}
           <div className="settings-row">
             <div>
               <h3>Privacidade e termos</h3>
@@ -87,34 +72,8 @@ function Settings() {
               <Link to="/termos">Termos</Link>
             </div>
           </div>
-          {demo && (
-            <Button asChild className="mt-6">
-              <Link to="/login">Criar minha conta</Link>
-            </Button>
-          )}
         </section>
       </main>
-      {reset && (
-        <div className="detail-overlay">
-          <section className="panel modal" role="dialog" aria-label="Restaurar demonstração">
-            <h2>Restaurar perfil demonstrativo?</h2>
-            <p className="muted">Suas alterações nesta demonstração serão descartadas.</p>
-            <div className="form-actions">
-              <Button variant="outline" onClick={() => setReset(false)}>
-                Cancelar
-              </Button>
-              <Button
-                onClick={() => {
-                  startDemo();
-                  setReset(false);
-                }}
-              >
-                Restaurar
-              </Button>
-            </div>
-          </section>
-        </div>
-      )}
     </Shell>
   );
 }

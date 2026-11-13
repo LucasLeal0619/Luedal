@@ -22,7 +22,7 @@ import { useAssistant } from "./conversational-assistant";
 import { useCareer } from "@/lib/career-context";
 import { analyze } from "@/lib/career";
 export function Dashboard() {
-  const { data, demo } = useCareer();
+  const { data } = useCareer();
   const analysis = analyze(data);
   const next = analysis.recommendations[0];
   const {open: openAssistant} = useAssistant();
@@ -288,7 +288,7 @@ export function Dashboard() {
                 Conversar com a Luedal AI <ArrowUpRight />
               </Button>
               <p className="text-[9px] mb-0 mt-3">
-                {demo ? "Entre para conversar com seu perfil privado" : "Conversa conectada ao seu perfil"}
+                Conversa conectada ao seu perfil
               </p>
             </section>
             <div className="px-2">
