@@ -27,7 +27,7 @@ export const sendChat = createServerFn({method: "POST"}).middleware([requireSupa
     const text = response.output.flatMap(item => item.type === "message" ? item.content.map(c => c.type === "output_text" ? c.text : c.type === "refusal" ? c.refusal : "") : []).join("\n").trim();
     if(!text) return {error:"A IA não concluiu a resposta. Você pode tentar novamente.",id};
     const {error} = await db.from("ai_messages").insert([{conversation_id:id,user_id:context.userId,role:"user",content:data.message},{conversation_id:id,user_id:context.userId,role:"assistant",content:text.slice(0,12000),created_at:new Date(Date.now()+1).toISOString()}]);
-    if(error) return {error:"A resposta foi gerada, mas não pôde ser salva. Tente novamente mais tarde.",id};
+    if(error) { console.error("Luedal AI persistence", {code:error.code,message:error.message,hint:error.hint}); return {error:"A resposta foi gerada, mas não pôde ser salva. Tente novamente mais tarde.",id}; }
     return {text,id,error:null};
   } catch(error) { const {GatewayError} = await import("@lovable.dev/ai-gateway"); if(error instanceof GatewayError) console.error("Luedal AI",error.code,error.ids); return {error:"A Luedal AI está indisponível no momento. Sua mensagem foi preservada; tente novamente quando desejar.",id}; }
 });
