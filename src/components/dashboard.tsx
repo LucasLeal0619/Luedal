@@ -65,11 +65,10 @@ export function Dashboard() {
               <h2>
                 {next
                   ? `Desenvolver ${next.name.toLowerCase()}${next.id === "integration" ? " para APIs Node.js" : ""}`
-                  : "Continue demonstrando suas competências"}
+                  : !analysis.hasData ? "Vamos conhecer suas competências" : !analysis.supported ? "Seu objetivo precisa de um mapa específico" : "Continue demonstrando suas competências"}
               </h2>
               <p>
-                {next?.activity ||
-                  "Suas atividades foram concluídas. Adicione evidências do que você aprendeu."}
+                {next?.activity || (!analysis.hasData ? "Adicione competências ou evidências ao perfil para receber um diagnóstico fundamentado." : !analysis.supported ? "Este beta ainda não possui um Skill Graph estruturado para seu objetivo. Não há diagnóstico completo disponível." : "Suas atividades foram concluídas. Adicione evidências do que você aprendeu.")}
               </p>
               <div className="why">
                 <strong>
@@ -89,11 +88,11 @@ export function Dashboard() {
               </div>
               <div className="next-bottom">
                 <span className="text-[10px] muted flex items-center gap-1.5">
-                  <ShieldCheck size={12} /> Recomendação baseada no seu perfil
+                  <ShieldCheck size={12} /> {next ? "Recomendação baseada no seu perfil" : "Diagnóstico limitado aos dados disponíveis"}
                 </span>
                 <Button asChild>
-                  <Link to="/minha-rota">
-                    Ver minha rota <ArrowRight />
+                  <Link to={next ? "/minha-rota" : "/perfil"}>
+                    {next ? "Ver minha rota" : "Completar meu perfil"} <ArrowRight />
                   </Link>
                 </Button>
               </div>
