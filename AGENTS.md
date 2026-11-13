@@ -37,3 +37,4 @@ use the editor.
 - Keep conversational inference in authenticated server functions through the AI Gateway; read context and bounded history with user-scoped RLS, never accept profile identity from the browser.
 - Mount the assistant in the root career provider so navigation preserves conversations; only authenticated sessions invoke inference.
 - Gate workspace pages in the client-only authenticated layout without browser-storage bypasses; backend handlers independently enforce authentication and ownership.
+- Construct chat message pairs in a browser-safe persistence helper with explicit timestamps on every row; heterogeneous bulk inserts otherwise null omitted required columns.
