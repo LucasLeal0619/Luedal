@@ -2,8 +2,8 @@ import { describe, it, expect } from "vitest";
 import { canEnterWorkspace, destination, signupSchema, resetSchema } from "@/lib/auth-rules";
 import { realProfile, profileContext, chatSchema, boundedHistory } from "@/lib/chat-rules";
 describe("Authentication rules",()=>{
-  it("denies a signed-out direct dashboard visit",()=>expect(canEnterWorkspace(null,false)).toBe(false));
-  it("allows only explicitly chosen demo without a session",()=>expect(canEnterWorkspace(null,true)).toBe(true));
+  it("denies a signed-out direct dashboard visit",()=>expect(canEnterWorkspace(null)).toBe(false));
+  it("requires a real authenticated identity",()=>expect(canEnterWorkspace("real-user-id")).toBe(true));
   it("routes new accounts to onboarding",()=>expect(destination(false)).toBe("/onboarding"));
   it("routes completed accounts to dashboard",()=>expect(destination(true)).toBe("/dashboard"));
   it("rejects mismatched signup passwords",()=>expect(signupSchema.safeParse({name:"Lucas Eduardo",email:"lucas@example.com",password:"abcdefgh",confirm:"ijklmnop"}).success).toBe(false));

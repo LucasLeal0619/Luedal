@@ -5,8 +5,7 @@ export const Route = createFileRoute("/_authenticated")({
   ssr: false,
   beforeLoad: async ({location}) => {
     const {data} = await supabase.auth.getUser();
-    const demo = sessionStorage.getItem("luedal-demo") !== null;
-    if(!canEnterWorkspace(data.user?.id ?? null,demo)) throw redirect({to:"/login"});
+    if(!canEnterWorkspace(data.user?.id ?? null)) throw redirect({to:"/login"});
     if(data.user) {
       const {data:row,error} = await supabase.from("profiles").select("career_data").eq("id",data.user.id).maybeSingle();
       if(error) throw new Error("Não foi possível carregar seu perfil. Tente novamente.");

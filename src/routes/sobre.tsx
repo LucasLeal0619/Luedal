@@ -42,7 +42,7 @@ function About() {
           </p>
           <div className="landing-actions">
             <Button asChild size="lg">
-              <Link to="/onboarding">
+              <Link to="/cadastro">
                 Começar minha evolução
                 <ArrowRight />
               </Link>
@@ -118,7 +118,7 @@ function About() {
           <p>
             Os primeiros recursos estão sendo disponibilizados gradualmente. O beta oferece um
             catálogo Backend Node.js / TypeScript, registro manual de evidências e diagnóstico por
-            regras. O assistente está em modo demonstrativo, claramente identificado.
+            regras. O assistente conversa com inteligência artificial e informações do seu perfil privado.
           </p>
         </section>
       </main>
