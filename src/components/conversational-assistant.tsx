@@ -12,7 +12,7 @@ type Message = {id:string;role:string;content:string};
 const ChatContext = createContext<{open:()=>void}|null>(null);
 export function useAssistant() {const c=useContext(ChatContext);if(!c) throw new Error("AssistantProvider required");return c;}
 export function AssistantProvider({children}:{children:ReactNode}) {
-  const {userId,demo,data}=useCareer(); const location=useLocation();
+  const {userId,data}=useCareer(); const location=useLocation();
   const load=useServerFn(loadChat); const send=useServerFn(sendChat);
   const [open,setOpen]=useState(false); const [history,setHistory]=useState(false);const [messages,setMessages]=useState<Message[]>([]);const [conversations,setConversations]=useState<{id:string;title:string}[]>([]);
   const [id,setId]=useState<string|null>(null);const [input,setInput]=useState("");const [busy,setBusy]=useState(false);const [loading,setLoading]=useState(false);const [error,setError]=useState("");
@@ -34,7 +34,7 @@ export function AssistantProvider({children}:{children:ReactNode}) {
   return <ChatContext.Provider value={{open:()=>{setOpen(true);if(userId && !id && !messages.length)void restore(null);}}}>
     {children}
     {open && <aside className="ai-panel" aria-label="Luedal AI">
-      <div className="ai-head"><div><h2 className="panel-title"><Sparkles className="text-primary"/>Luedal AI</h2><p className="text-xs text-muted-foreground mt-2">{userId?data.name || "Minha conta":demo?"Demonstração · sem acesso à IA privada":"Entre para conversar"}</p></div><div className="flex gap-1"><Button variant="ghost" size="icon" title="Histórico de conversas" aria-label="Histórico de conversas" disabled={!userId||busy||loading} onClick={()=>setHistory(!history)}><History/></Button><Button variant="ghost" size="icon" title="Nova conversa" aria-label="Nova conversa" disabled={!userId||busy||loading} onClick={()=>{setId(null);setMessages([]);setInput("");setError("");setHistory(false);}}><Plus/></Button><Button variant="ghost" size="icon" aria-label="Fechar assistente" onClick={()=>setOpen(false)}><X/></Button></div></div>
+      <div className="ai-head"><div><h2 className="panel-title"><Sparkles className="text-primary"/>Luedal AI</h2><p className="text-xs text-muted-foreground mt-2">{userId?data.name || "Minha conta":"Entre para conversar"}</p></div><div className="flex gap-1"><Button variant="ghost" size="icon" title="Histórico de conversas" aria-label="Histórico de conversas" disabled={!userId||busy||loading} onClick={()=>setHistory(!history)}><History/></Button><Button variant="ghost" size="icon" title="Nova conversa" aria-label="Nova conversa" disabled={!userId||busy||loading} onClick={()=>{setId(null);setMessages([]);setInput("");setError("");setHistory(false);}}><Plus/></Button><Button variant="ghost" size="icon" aria-label="Fechar assistente" onClick={()=>setOpen(false)}><X/></Button></div></div>
       {history && <div className="chat-history">{conversations.length?conversations.map(c=><Button key={c.id} variant={c.id===id?"secondary":"ghost"} className="justify-start h-auto whitespace-normal text-left text-xs" onClick={()=>{setHistory(false);void restore(c.id);}}>{c.title}</Button>):<p className="text-xs text-muted-foreground">Nenhuma conversa salva.</p>}</div>}
       <div className="ai-messages">
         {!userId?<div className="chat-bubble"><p>A conversa utiliza somente seu perfil privado. Entre na sua conta para conversar com a Luedal AI.</p><Button asChild className="mt-4"><Link to="/login" onClick={()=>setOpen(false)}>Entrar</Link></Button></div>:<>

@@ -155,7 +155,9 @@ export const demoProfile = (): CareerData => ({
 export function analyze(data: CareerData) {
   const evidenced = new Set(data.evidences.flatMap((e) => e.skills));
   const mapped = skills.filter((s) => data.familiarity[s.id] !== undefined || evidenced.has(s.id));
-  const gaps = skills.filter((s) => !evidenced.has(s.id));
+  const supported = data.goal === GOAL;
+  const hasData = mapped.length > 0 || data.evidences.length > 0;
+  const gaps = supported && hasData ? skills.filter((s) => !evidenced.has(s.id)) : [];
   const ready = (s: Skill) =>
     s.prerequisites.every((id) => (data.familiarity[id] ?? 0) >= 2 || evidenced.has(id));
   const recommendations = gaps
@@ -166,7 +168,7 @@ export function analyze(data: CareerData) {
         b.priority - a.priority ||
         skills.indexOf(a) - skills.indexOf(b),
     );
-  return { evidenced, mapped, gaps, recommendations, ready };
+  return { evidenced, mapped, gaps, recommendations, ready, supported, hasData };
 }
 export function explain(skill: Skill, data: CareerData) {
   const prerequisites = skill.prerequisites

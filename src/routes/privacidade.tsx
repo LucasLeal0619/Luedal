@@ -15,15 +15,14 @@ function Privacy() {
         <h1 className="text-3xl my-6">Privacidade na Luedal</h1>
         <p>
           Seu perfil profissional inclui informações que você fornece: nome, objetivo, competências
-          e evidências. Perfis de contas são privados e vinculados ao usuário. O ambiente
-          demonstrativo usa dados fictícios e mantém suas alterações apenas nesta sessão do
-          navegador.
+          e evidências. Perfis e conversas são privados e vinculados à conta autenticada.
         </p>
         <h2 className="mt-8">Controle e transparência</h2>
         <p>
           Você pode editar seu perfil, remover evidências e exportar seus dados nas configurações. O
-          assistente demonstrativo utiliza as informações do perfil por regras locais; não envia
-          suas mensagens a um provedor externo de IA.
+          assistente envia suas mensagens, uma janela limitada do histórico e informações do
+          seu perfil a um provedor de inteligência artificial para gerar respostas. Não envie
+          senhas ou informações confidenciais. As conversas são armazenadas na sua conta.
         </p>
         <h2 className="mt-8">Antes do lançamento público</h2>
         <p>

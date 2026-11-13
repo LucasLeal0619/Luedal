@@ -39,7 +39,7 @@ const nav = [
   { to: "/evidencias", label: "Evidências", icon: FolderOpen },
 ] as const;
 export function Shell({ children, title }: { children: ReactNode; title: string }) {
-  const { data, demo, loading } = useCareer();
+  const { data, loading } = useCareer();
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [mobile, setMobile] = useState(false);
@@ -96,7 +96,7 @@ export function Shell({ children, title }: { children: ReactNode; title: string 
             <div className="user-copy">
               <strong className="text-xs font-medium">{data.name || "Meu perfil"}</strong>
               <p className="muted text-[10px] mt-1">
-                {demo ? "Perfil demonstrativo" : "Minha conta"}
+                Minha conta
               </p>
             </div>
             <Button
@@ -127,10 +127,6 @@ export function Shell({ children, title }: { children: ReactNode; title: string 
           <strong className="text-foreground font-medium">{title}</strong>
         </div>
         <div className="topbar-right">
-          {demo && <span className="demo-badge">Ambiente demonstrativo</span>}
-          <Button variant="ghost" size="icon" title="Notificações" onClick={() => openAssistant()}>
-            <Bell size={16} />
-          </Button>
           <Button variant="outline" onClick={() => openAssistant()}>
             <Sparkles className="text-primary" />
             Luedal AI
@@ -176,7 +172,7 @@ export function PublicHeader() {
         <Link to="/sobre">Conhecer a Luedal</Link>
         {userId ? <><Link to={data.onboarded ? "/dashboard" : "/onboarding"}>Minha conta</Link><Button variant="ghost" onClick={() => void logout()}>Sair</Button></> : <Link to="/login">Entrar</Link>}
         <Button asChild>
-          <Link to="/onboarding">
+          <Link to={userId ? "/onboarding" : "/cadastro"}>
             Começar minha evolução <ArrowUpRight />
           </Link>
         </Button>

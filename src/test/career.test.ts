@@ -17,8 +17,12 @@ describe("Career rules", () => {
     if (!integration) throw new Error("Missing integration skill");
     expect(a.ready(integration)).toBe(true);
   });
-  it("does not prioritize integration before its prerequisites", () => {
-    expect(analyze(emptyProfile()).recommendations[0]?.id).toBe("logic");
+  it("does not invent recommendations for an empty profile", () => {
+    expect(analyze(emptyProfile()).recommendations).toEqual([]);
+  });
+  it("does not use the Backend graph for an unrelated goal", () => {
+    const profile=demoProfile();profile.goal="Arquiteto de software";
+    expect(analyze(profile).recommendations).toEqual([]);
   });
   it("does not equate self-assessment with evidence", () => {
     const p = emptyProfile();

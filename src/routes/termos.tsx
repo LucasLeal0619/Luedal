@@ -21,7 +21,8 @@ function Terms() {
         <p>
           Competências declaradas e evidências registradas não equivalem a validação técnica.
           Recomendações são calculadas por regras explícitas e não garantem contratação, nível
-          profissional ou resultados de carreira. O assistente da versão atual é demonstrativo.
+          profissional ou resultados de carreira. O assistente utiliza inteligência artificial,
+          pode cometer erros e não altera seu perfil nem valida tecnicamente suas evidências.
         </p>
         <h2 className="mt-8">Conteúdo fornecido pelo usuário</h2>
         <p>

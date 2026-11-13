@@ -31,9 +31,10 @@ use the editor.
 
 ## Application architecture
 - Keep professional evolution rules and the catalog in a browser-safe domain module, separate from UI and persistence; deterministic recommendations must stay testable without an AI provider.
-- Persist authenticated career aggregates in user-owned Cloud profiles guarded by RLS; keep demonstration state in sessionStorage only and visibly identify it to avoid mixing real and fictional data.
+- Persist career aggregates exclusively in user-owned Cloud profiles guarded by RLS; anonymous visitors never receive workspace data.
 - Use one shared career context and application shell across distinct file routes; profile changes immediately recompute gaps and career recommendations.
 - Use React Flow for interactive prerequisite graphs rather than a decorative graph implementation.
 - Keep conversational inference in authenticated server functions through the AI Gateway; read context and bounded history with user-scoped RLS, never accept profile identity from the browser.
-- Mount the assistant in the root career provider so navigation preserves conversations; demo mode cannot invoke private inference.
-- Gate workspace pages in the client-only authenticated layout; only explicit session-scoped demonstration may bypass sign-in, without access to private server functions.
+- Mount the assistant in the root career provider so navigation preserves conversations; only authenticated sessions invoke inference.
+- Gate workspace pages in the client-only authenticated layout without browser-storage bypasses; backend handlers independently enforce authentication and ownership.
+- Construct chat message pairs in a browser-safe persistence helper with explicit timestamps on every row; heterogeneous bulk inserts otherwise null omitted required columns.

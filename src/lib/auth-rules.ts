@@ -12,4 +12,4 @@ export function authError(code?: string) {
   return "Não foi possível concluir a solicitação. Verifique sua conexão e tente novamente.";
 }
 export const destination = (onboarded: boolean) => onboarded ? "/dashboard" : "/onboarding";
-export function canEnterWorkspace(userId: string | null, explicitDemo: boolean) { return Boolean(userId) || explicitDemo; }
+export function canEnterWorkspace(userId: string | null) { return Boolean(userId); }

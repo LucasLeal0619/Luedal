@@ -10,7 +10,7 @@ import { authError, destination, emailSchema, passwordSchema, resetSchema, signu
 import "@lovable.dev/cloud-auth-js/styles.css";
 export function AuthForm({mode}: {mode:"login"|"signup"|"forgot"|"reset"}) {
   const navigate = useNavigate();
-  const {userId,loading,data,startDemo,logout} = useCareer();
+  const {userId,loading,data,logout} = useCareer();
   const [name,setName]=useState(""); const [email,setEmail]=useState(""); const [password,setPassword]=useState(""); const [confirm,setConfirm]=useState("");
   const [show,setShow]=useState(false); const [busy,setBusy]=useState(false); const [error,setError]=useState(""); const [notice,setNotice]=useState(""); const [recovery,setRecovery]=useState(false);
   useEffect(() => { if(mode !== "reset" && !loading && userId) void navigate({to:destination(data.onboarded),replace:true}); },[mode,loading,userId,data.onboarded,navigate]);
@@ -52,13 +52,13 @@ export function AuthForm({mode}: {mode:"login"|"signup"|"forgot"|"reset"}) {
       }
     } catch {setError(authError());} finally {setBusy(false);}
   }
-  async function social(provider:"google"|"lovable") {setBusy(true);setError("");try {const result=await lovable.auth.signInWithOAuth(provider,{redirect_uri:window.location.origin+"/login"});if(result.error) setError(authError());} catch {setError(authError());} finally{setBusy(false);}}
+  async function social() {setBusy(true);setError("");try {const result=await lovable.auth.signInWithOAuth("google",{redirect_uri:window.location.origin+"/login"});if(result.error) setError(authError());} catch {setError(authError());} finally{setBusy(false);}}
   const hasPassword=mode!=="forgot"; const confirmPassword=mode==="signup"||mode==="reset";
   return <main className="panel auth-card">
     <Brand />
     <h1>{mode==="login"?"Bem-vindo de volta":mode==="signup"?"Crie sua conta":mode==="forgot"?"Esqueceu sua senha?":"Redefinir senha"}</h1>
     <p>{mode==="forgot"?"Informe o e-mail cadastrado na Luedal para receber um link de redefinição de senha.":mode==="signup"?"Sua evolução começa com seu perfil real.":mode==="reset"?"Escolha uma nova senha para sua conta.":"Entre para continuar sua evolução profissional."}</p>
-    {(mode==="login"||mode==="signup") && <><div className="flex flex-col gap-3"><Button variant="outline" className="w-full" disabled={busy} onClick={()=>void social("google")}>Continuar com Google</Button><Button variant="outline" className="lovable-auth-button w-full" disabled={busy} onClick={()=>void social("lovable")}>Continue with Lovable</Button></div><div className="auth-divider">ou com seu e-mail</div></>}
+    {(mode==="login"||mode==="signup") && <><Button variant="outline" className="w-full" disabled={busy} onClick={()=>void social()}>Continuar com Google</Button><div className="auth-divider">ou com seu e-mail</div></>}
     {(mode!=="reset" || recovery) && !notice.includes("Senha atualizada") && <form onSubmit={e=>{e.preventDefault();void submit();}}>
       {mode==="signup" && <div className="form-field"><label htmlFor="auth-name">Nome completo</label><input id="auth-name" autoComplete="name" maxLength={80} required value={name} onChange={e=>setName(e.target.value)} /></div>}
       {mode!=="reset" && <div className="form-field"><label htmlFor="auth-email">E-mail</label><input id="auth-email" type="email" autoComplete="email" maxLength={255} required value={email} onChange={e=>setEmail(e.target.value)} placeholder="voce@exemplo.com" /></div>}
@@ -71,7 +71,6 @@ export function AuthForm({mode}: {mode:"login"|"signup"|"forgot"|"reset"}) {
       {mode==="login"?<><Link to="/esqueci-senha" className="text-primary">Esqueceu sua senha?</Link><Link to="/cadastro" className="text-primary">Não tem uma conta? Cadastre-se</Link></>:<Link to="/login" className="text-primary">Voltar para o login</Link>}
       {mode==="reset" && !recovery && <Link to="/esqueci-senha" className="text-primary">Solicitar novo link</Link>}
     </div>
-    {mode==="login" && <><div className="auth-divider">conheça primeiro</div><Button variant="outline" className="w-full" onClick={()=>{startDemo();void navigate({to:"/dashboard"});}}>Explorar demonstração</Button></>}
     <p className="text-xs text-muted-foreground text-center mt-6"><Link to="/privacidade">Privacidade</Link> · <Link to="/termos">Termos</Link></p>
   </main>;
 }

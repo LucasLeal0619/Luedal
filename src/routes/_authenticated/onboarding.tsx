@@ -21,7 +21,7 @@ const situations = [
   "Em transição de carreira",
 ];
 function Onboarding() {
-  const { data, update, demo, startEmpty, loading } = useCareer();
+  const { data, update, loading } = useCareer();
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState(data);
@@ -96,28 +96,7 @@ function Onboarding() {
                 ))}
               </select>
             </div>
-            {demo && (
-              <div className="mt-6">
-                <span className="demo-badge">Demonstração · salvo apenas nesta sessão</span>
-                <Button
-                  variant="link"
-                  className="block p-0 mt-4"
-                  onClick={() => {
-                    startEmpty();
-                    setForm({
-                      ...form,
-                      name: "",
-                      familiarity: {},
-                      evidences: [],
-                      progress: {},
-                      onboarded: false,
-                    });
-                  }}
-                >
-                  Começar com um perfil vazio
-                </Button>
-              </div>
-            )}
+
           </>
         )}
         {step === 1 && (
