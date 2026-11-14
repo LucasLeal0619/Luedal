@@ -103,6 +103,12 @@ export type Evidence = {
   contribution: string;
 };
 export type CareerData = {
+  areaId?: string;
+  goalId?: string;
+  goalSource?: string;
+  seniority?: string;
+  onboardingStep?: number;
+  customSkills?: Skill[];
   name: string;
   situation: string;
   goal: string;
@@ -114,17 +120,18 @@ export type CareerData = {
 };
 export const emptyProfile = (): CareerData => ({
   name: "",
-  situation: "Estudante de tecnologia",
-  goal: GOAL,
+  situation: "",
+  goal: "",
   familiarity: {},
   evidences: [],
   progress: {},
   onboarded: false,
-  learning: "Projetos práticos",
+  learning: "",
 });
 export const demoProfile = (): CareerData => ({
   ...emptyProfile(),
   name: "Alex Martins",
+  goal: GOAL,
   situation: "Em busca da primeira oportunidade",
   onboarded: true,
   familiarity: {
@@ -152,12 +159,15 @@ export const demoProfile = (): CareerData => ({
     },
   ],
 });
-export function analyze(data: CareerData) {
+export function analyze(data: CareerData, catalog?: import("./career-catalog").CareerCatalog) {
+  const allSkills = catalog ? [...catalog.skills, ...(data.customSkills ?? [])] : skills;
+  const goal = catalog?.goals.find(g => g.id === data.goalId && data.goalSource !== "custom");
+  const goalSkills = catalog ? allSkills.filter(s => goal?.skill_ids.includes(s.id)) : skills;
   const evidenced = new Set(data.evidences.flatMap((e) => e.skills));
-  const mapped = skills.filter((s) => data.familiarity[s.id] !== undefined || evidenced.has(s.id));
-  const supported = data.goal === GOAL;
+  const mapped = allSkills.filter((s) => data.familiarity[s.id] !== undefined || evidenced.has(s.id));
+  const supported = catalog ? goal?.mapping_status === "complete" && goalSkills.length > 0 : data.goal === GOAL;
   const hasData = mapped.length > 0 || data.evidences.length > 0;
-  const gaps = supported && hasData ? skills.filter((s) => !evidenced.has(s.id)) : [];
+  const gaps = supported && hasData ? goalSkills.filter((s) => !evidenced.has(s.id)) : [];
   const ready = (s: Skill) =>
     s.prerequisites.every((id) => (data.familiarity[id] ?? 0) >= 2 || evidenced.has(id));
   const recommendations = gaps
@@ -166,15 +176,15 @@ export function analyze(data: CareerData) {
       (a, b) =>
         Number(ready(b)) - Number(ready(a)) ||
         b.priority - a.priority ||
-        skills.indexOf(a) - skills.indexOf(b),
+        allSkills.indexOf(a) - allSkills.indexOf(b),
     );
   return { evidenced, mapped, gaps, recommendations, ready, supported, hasData };
 }
-export function explain(skill: Skill, data: CareerData) {
+export function explain(skill: Skill, data: CareerData, catalog?: import("./career-catalog").CareerCatalog) {
   const prerequisites = skill.prerequisites
-    .map((id) => skills.find((s) => s.id === id)?.name)
+    .map((id) => (catalog?.skills ?? skills).find((s) => s.id === id)?.name)
     .filter(Boolean);
-  return `Ainda não encontramos evidências suficientes de ${skill.name} no seu perfil. ${prerequisites.length ? `Essa competência se conecta a ${prerequisites.join(" e ")}. ` : ""}Ela é relevante para seu objetivo de Backend Júnior. ${analyze(data).ready(skill) ? "Seus pré-requisitos declarados permitem começar esta atividade." : "Comece pelos pré-requisitos indicados antes de avançar."}`;
+  return `Ainda não encontramos evidências suficientes de ${skill.name} no seu perfil. ${prerequisites.length ? `Essa competência se conecta a ${prerequisites.join(" e ")}. ` : ""}Ela faz parte do mapeamento de ${data.goal}. ${analyze(data, catalog).ready(skill) ? "Seus pré-requisitos declarados permitem começar esta atividade." : "Comece pelos pré-requisitos indicados antes de avançar."}`;
 }
 export function meta(title: string, description: string) {
   return {

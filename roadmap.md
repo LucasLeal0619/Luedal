@@ -1,4 +1,7 @@
 # Luedal SaaS
+- [ ] Replace fixed onboarding goals with a persistent searchable career catalog and free-text goals.
+- [ ] Personalize skill suggestions, save/resume steps and multiple experiences, and allow later goal edits.
+- [ ] Align dashboard, profile, Skill Graph and GPS with selected mappings; verify new-account persistence and isolation.
 - [x] Make account logout accessible from every workspace page and verify login redirect and denied re-entry after exit.
 - [x] Preserve official identity and application shell.
 - [x] Remove public demo entry, browser-storage auth bypass and Lovable sign-in.
