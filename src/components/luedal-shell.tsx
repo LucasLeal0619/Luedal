@@ -18,6 +18,7 @@ import {
   Send,
   Sun,
   Moon,
+  LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import symbol from "@/assets/luedal-symbol.png.asset.json";
@@ -39,7 +40,8 @@ const nav = [
   { to: "/evidencias", label: "Evidências", icon: FolderOpen },
 ] as const;
 export function Shell({ children, title }: { children: ReactNode; title: string }) {
-  const { data, loading } = useCareer();
+  const { data, loading, logout } = useCareer();
+  const [signingOut, setSigningOut] = useState(false);
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [mobile, setMobile] = useState(false);
@@ -130,6 +132,17 @@ export function Shell({ children, title }: { children: ReactNode; title: string 
           <Button variant="outline" onClick={() => openAssistant()}>
             <Sparkles className="text-primary" />
             Luedal AI
+          </Button>
+          <Button
+            variant="ghost"
+            disabled={signingOut}
+            onClick={async () => {
+              setSigningOut(true);
+              try { await logout(); } finally { setSigningOut(false); }
+            }}
+          >
+            <LogOut />
+            {signingOut ? "Saindo…" : "Sair"}
           </Button>
         </div>
       </header>

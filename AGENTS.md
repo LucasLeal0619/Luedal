@@ -38,3 +38,4 @@ use the editor.
 - Mount the assistant in the root career provider so navigation preserves conversations; only authenticated sessions invoke inference.
 - Gate workspace pages in the client-only authenticated layout without browser-storage bypasses; backend handlers independently enforce authentication and ownership.
 - Construct chat message pairs in a browser-safe persistence helper with explicit timestamps on every row; heterogeneous bulk inserts otherwise null omitted required columns.
+- Centralize sign-out sequencing in the career provider with a tested helper and replace navigation to login; all exit controls must clear the current session and protected cache consistently.

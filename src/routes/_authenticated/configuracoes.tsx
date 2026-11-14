@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { LogOut, Download } from "lucide-react";
 import { Shell, PageHeading, ThemeControl } from "@/components/luedal-shell";
 import { useCareer } from "@/lib/career-context";
@@ -11,7 +11,6 @@ export const Route = createFileRoute("/_authenticated/configuracoes")({
 });
 function Settings() {
   const { data, logout } = useCareer();
-  const nav = useNavigate();
   return (
     <Shell title="Configurações">
       <main className="page">
@@ -53,10 +52,7 @@ function Settings() {
               </div>
               <Button
                 variant="outline"
-                onClick={async () => {
-                  await logout();
-                  await nav({ to: "/login", replace: true });
-                }}
+                onClick={() => void logout()}
               >
                 <LogOut />
                 Sair
