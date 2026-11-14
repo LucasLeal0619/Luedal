@@ -6,7 +6,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { realProfile } from "./chat-rules";
 import { signOutAccount } from "./sign-out";
+import { emptyCatalog, type CareerCatalog } from "./career-catalog";
+import { loadCareerCatalog } from "./catalog-persistence";
 type Store = {
+  catalog: CareerCatalog;
   data: CareerData;
   demo: boolean;
   loading: boolean;
@@ -17,6 +20,7 @@ type Store = {
 const Context = createContext<Store | null>(null);
 export function CareerProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<CareerData>(emptyProfile);
+  const [catalog, setCatalog] = useState<CareerCatalog>(emptyCatalog);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
   const queryClient = useQueryClient();
@@ -31,6 +35,7 @@ export function CareerProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       setUserId(id);
       setData(emptyProfile());
+      setCatalog(emptyCatalog);
       if (id) {
         const { data: row, error } = await supabase
           .from("profiles")
@@ -40,6 +45,11 @@ export function CareerProvider({ children }: { children: ReactNode }) {
         if (!alive || current !== version) return;
         if (error) toast.error("Não foi possível carregar seu perfil.");
         setData(realProfile(row?.career_data));
+        try {
+          const nextCatalog = await loadCareerCatalog();
+          if (!alive || current !== version) return;
+          setCatalog(nextCatalog);
+        } catch { toast.error("Não foi possível carregar as opções de carreira. Tente atualizar a página."); }
       }
       setLoading(false);
     };
@@ -77,6 +87,7 @@ export function CareerProvider({ children }: { children: ReactNode }) {
   return (
     <Context.Provider
       value={{
+        catalog,
         data,
         demo: false,
         loading,
@@ -92,6 +103,7 @@ export function CareerProvider({ children }: { children: ReactNode }) {
                 sessionStorage.removeItem("luedal-demo");
                 sessionStorage.removeItem("luedal-recovery");
                 setData(emptyProfile());
+                setCatalog(emptyCatalog);
                 setUserId(null);
               },
               goToLogin: () => router.navigate({ to: "/login", replace: true }),
