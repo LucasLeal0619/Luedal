@@ -1,4 +1,5 @@
 # Luedal SaaS
+- [x] Make account logout accessible from every workspace page and verify login redirect and denied re-entry after exit.
 - [x] Preserve official identity and application shell.
 - [x] Remove public demo entry, browser-storage auth bypass and Lovable sign-in.
 - [x] Verify real-account dashboard, anonymous route denial, logout and invalid recovery links.

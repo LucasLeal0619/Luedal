@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { realProfile } from "./chat-rules";
+import { signOutAccount } from "./sign-out";
 type Store = {
   data: CareerData;
   demo: boolean;
@@ -82,13 +83,22 @@ export function CareerProvider({ children }: { children: ReactNode }) {
         userId,
         update,
         logout: async () => {
-          await queryClient.cancelQueries();
-          queryClient.clear();
-          await supabase.auth.signOut();
-          sessionStorage.removeItem("luedal-demo");
-          sessionStorage.removeItem("luedal-recovery");
-          setData(emptyProfile());
-          setUserId(null);
+          try {
+            await signOutAccount({
+              cancelQueries: () => queryClient.cancelQueries(),
+              clearQueries: () => queryClient.clear(),
+              endSession: () => supabase.auth.signOut({ scope: "local" }),
+              clearProfile: () => {
+                sessionStorage.removeItem("luedal-demo");
+                sessionStorage.removeItem("luedal-recovery");
+                setData(emptyProfile());
+                setUserId(null);
+              },
+              goToLogin: () => router.navigate({ to: "/login", replace: true }),
+            });
+          } catch {
+            toast.error("Não foi possível sair. Verifique sua conexão e tente novamente.");
+          }
         },
       }}
     >
