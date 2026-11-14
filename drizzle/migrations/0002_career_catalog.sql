@@ -1,0 +1,15 @@
+CREATE TABLE public.career_areas (id text PRIMARY KEY, name text NOT NULL, description text NOT NULL DEFAULT '', sort_order integer NOT NULL DEFAULT 0);
+GRANT SELECT ON public.career_areas TO authenticated;
+GRANT ALL ON public.career_areas TO service_role;
+ALTER TABLE public.career_areas ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Signed in users read career areas" ON public.career_areas FOR SELECT TO authenticated USING (true);
+CREATE TABLE public.career_skills (id text PRIMARY KEY, name text NOT NULL, category text NOT NULL, area_ids text[] NOT NULL DEFAULT '{}', prerequisites text[] NOT NULL DEFAULT '{}', activity text NOT NULL DEFAULT '', priority integer NOT NULL DEFAULT 60);
+GRANT SELECT ON public.career_skills TO authenticated;
+GRANT ALL ON public.career_skills TO service_role;
+ALTER TABLE public.career_skills ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Signed in users read career skills" ON public.career_skills FOR SELECT TO authenticated USING (true);
+CREATE TABLE public.career_goals (id text PRIMARY KEY, area_id text NOT NULL REFERENCES public.career_areas(id), title text NOT NULL, description text NOT NULL DEFAULT '', seniorities text[] NOT NULL DEFAULT '{}', mapping_status text NOT NULL DEFAULT 'unmapped' CHECK (mapping_status IN ('complete','partial','unmapped')), skill_ids text[] NOT NULL DEFAULT '{}');
+GRANT SELECT ON public.career_goals TO authenticated;
+GRANT ALL ON public.career_goals TO service_role;
+ALTER TABLE public.career_goals ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Signed in users read career goals" ON public.career_goals FOR SELECT TO authenticated USING (true);

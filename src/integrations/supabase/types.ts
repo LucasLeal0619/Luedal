@@ -111,6 +111,95 @@ export type Database = {
           },
         ]
       }
+      career_areas: {
+        Row: {
+          description: string
+          id: string
+          name: string
+          sort_order: number
+        }
+        Insert: {
+          description?: string
+          id: string
+          name: string
+          sort_order?: number
+        }
+        Update: {
+          description?: string
+          id?: string
+          name?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      career_goals: {
+        Row: {
+          area_id: string
+          description: string
+          id: string
+          mapping_status: string
+          seniorities: string[]
+          skill_ids: string[]
+          title: string
+        }
+        Insert: {
+          area_id: string
+          description?: string
+          id: string
+          mapping_status?: string
+          seniorities?: string[]
+          skill_ids?: string[]
+          title: string
+        }
+        Update: {
+          area_id?: string
+          description?: string
+          id?: string
+          mapping_status?: string
+          seniorities?: string[]
+          skill_ids?: string[]
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "career_goals_area_id_fkey"
+            columns: ["area_id"]
+            isOneToOne: false
+            referencedRelation: "career_areas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      career_skills: {
+        Row: {
+          activity: string
+          area_ids: string[]
+          category: string
+          id: string
+          name: string
+          prerequisites: string[]
+          priority: number
+        }
+        Insert: {
+          activity?: string
+          area_ids?: string[]
+          category: string
+          id: string
+          name: string
+          prerequisites?: string[]
+          priority?: number
+        }
+        Update: {
+          activity?: string
+          area_ids?: string[]
+          category?: string
+          id?: string
+          name?: string
+          prerequisites?: string[]
+          priority?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           career_data: Json
