@@ -15,7 +15,8 @@ function Terms() {
         <h1 className="text-3xl my-6">Termos do beta</h1>
         <p>
           A Luedal é uma plataforma de evolução profissional em tecnologia em desenvolvimento. O
-          objetivo atualmente suportado é Desenvolvedor Backend Júnior com Node.js / TypeScript.
+          catálogo permite escolher diferentes áreas e registrar objetivos personalizados. Alguns
+          objetivos ainda não possuem mapeamento completo de competências e diagnóstico específico.
         </p>
         <h2 className="mt-8">Limites da experiência</h2>
         <p>

@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
 import { analyze, demoProfile, emptyProfile, GOAL, skills, explain } from "@/lib/career";
 describe("Career rules", () => {
-  it("supports Backend Junior as the initial goal", () => {
-    expect(GOAL).toBe("Desenvolvedor Backend Júnior");
-    expect(emptyProfile().goal).toBe(GOAL);
+  it("does not assign Backend Junior to a new account", () => {
+    expect(emptyProfile().goal).toBe("");
+    expect(emptyProfile().situation).toBe("");
   });
   it("registers evidence without calling a skill technically validated", () => {
     const a = analyze(demoProfile());
@@ -26,6 +26,7 @@ describe("Career rules", () => {
   });
   it("does not equate self-assessment with evidence", () => {
     const p = emptyProfile();
+    p.goal = GOAL;
     p.familiarity["integration"] = 4;
     expect(analyze(p).gaps.some((s) => s.id === "integration")).toBe(true);
     expect(analyze(p).mapped.length).toBe(1);

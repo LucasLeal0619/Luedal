@@ -39,3 +39,5 @@ use the editor.
 - Gate workspace pages in the client-only authenticated layout without browser-storage bypasses; backend handlers independently enforce authentication and ownership.
 - Construct chat message pairs in a browser-safe persistence helper with explicit timestamps on every row; heterogeneous bulk inserts otherwise null omitted required columns.
 - Centralize sign-out sequencing in the career provider with a tested helper and replace navigation to login; all exit controls must clear the current session and protected cache consistently.
+- Store selectable areas, goals and prerequisite skills in read-only Cloud catalog tables; browser-safe domain helpers derive suggestions and recommendations only for complete goal mappings.
+- Persist onboarding step, free-text goal, custom skills and experiences in the user-owned career aggregate on navigation and explicit save; share goal and skill pickers with profile editing.
