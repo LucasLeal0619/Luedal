@@ -21,6 +21,10 @@ const situations = [
   "Em transição de carreira",
 ];
 function Profile() {
+  const { loading } = useCareer();
+  return loading ? <Shell title="Perfil profissional"><div className="loading-page">Carregando seu perfil…</div></Shell> : <ProfileEditor />;
+}
+function ProfileEditor() {
   const { data, update, catalog } = useCareer();
   const [goalForm, setGoalForm] = useState(data);
   const [name, setName] = useState(data.name);
@@ -41,7 +45,8 @@ function Profile() {
             onSubmit={async (e) => {
               e.preventDefault();
               setBusy(true);
-              if (await update({ ...goalForm, name, situation, learning }))
+              if (!goalForm.goal.trim()) { toast.error("Informe seu objetivo profissional."); setBusy(false); return; }
+              if (await update({ ...data, ...goalForm, name, situation, learning }))
                 toast.success("Perfil salvo. Sua rota foi recalculada.");
               setBusy(false);
             }}
@@ -59,15 +64,12 @@ function Profile() {
             </div>
             <div className="form-field">
               <label htmlFor="profile-situation">Momento profissional</label>
-              <select
+              <input
                 id="profile-situation"
                 value={situation}
+                maxLength={150}
                 onChange={(e) => setSituation(e.target.value)}
-              >
-                {situations.map((s) => (
-                  <option key={s}>{s}</option>
-                ))}
-              </select>
+              />
             </div>
             <div className="form-field">
               <label htmlFor="profile-learning">Preferência de aprendizado</label>
@@ -76,6 +78,7 @@ function Profile() {
                 value={learning}
                 onChange={(e) => setLearning(e.target.value)}
               >
+                <option value="">Não definir agora</option>
                 {[
                   "Projetos práticos",
                   "Documentação e leitura",

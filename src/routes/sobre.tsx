@@ -55,7 +55,7 @@ function About() {
             </Button>
           </div>
           <span className="muted text-xs">
-            Beta · Primeiro objetivo: Backend Júnior com Node.js / TypeScript
+            Beta · Objetivos em diferentes áreas de tecnologia
           </span>
         </section>
         <section className="landing-section">
@@ -117,8 +117,9 @@ function About() {
           <h2>Uma base sólida. Um beta transparente.</h2>
           <p>
             Os primeiros recursos estão sendo disponibilizados gradualmente. O beta oferece um
-            catálogo Backend Node.js / TypeScript, registro manual de evidências e diagnóstico por
-            regras. O assistente conversa com inteligência artificial e informações do seu perfil privado.
+            catálogo de carreiras em expansão, objetivos personalizados e registro manual de evidências.
+            Diagnósticos por regras estão disponíveis apenas para objetivos com mapeamento completo.
+            O assistente conversa com inteligência artificial e informações do seu perfil privado.
           </p>
         </section>
       </main>
