@@ -1,8 +1,9 @@
+import { profileSkills } from "@/lib/career-catalog";
 import { useState } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCareer } from "@/lib/career-context";
-import { skills, type Evidence } from "@/lib/career";
+import { type Evidence } from "@/lib/career";
 import { toast } from "sonner";
 export function EvidenceForm({
   onClose,
@@ -11,7 +12,8 @@ export function EvidenceForm({
   onClose: () => void;
   existing?: Evidence | undefined;
 }) {
-  const { data, update } = useCareer();
+  const { data, update, catalog } = useCareer();
+  const skills = profileSkills(data, catalog);
   const [form, setForm] = useState<Evidence>(
     existing ?? {
       id: crypto.randomUUID(),
