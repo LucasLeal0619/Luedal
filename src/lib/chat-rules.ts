@@ -10,6 +10,6 @@ export function realProfile(value: unknown, name = ""): CareerData {
   const parsed = schema.safeParse(value);
   const base = emptyProfile();
   if(!parsed.success) return {...base,name};
-  return {...base,...parsed.data,name:parsed.data.name ?? name};
+  return {...base, name:parsed.data.name ?? name, situation:parsed.data.situation ?? "", goal:parsed.data.goal ?? "", familiarity:parsed.data.familiarity ?? {}, evidences:parsed.data.evidences ?? [], progress:parsed.data.progress ?? {}, onboarded:parsed.data.onboarded ?? false, learning:parsed.data.learning ?? "", areaId:parsed.data.areaId ?? "", goalId:parsed.data.goalId ?? "", goalSource:parsed.data.goalSource ?? "", seniority:parsed.data.seniority ?? "", onboardingStep:parsed.data.onboardingStep ?? 0, customSkills:parsed.data.customSkills ?? []};
 }
 export function boundedHistory<T extends {content: string}>(messages: T[]) { let size = 0; return messages.slice(-20).reverse().filter(m => { size += m.content.length; return size <= 24000; }).reverse(); }
