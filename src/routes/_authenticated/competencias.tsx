@@ -1,3 +1,4 @@
+import { profileSkills, limitedMappingMessage } from "@/lib/career-catalog";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { ReactFlow, Background, Controls, type Node, type Edge } from "@xyflow/react";
@@ -5,22 +6,23 @@ import { LayoutGrid, Network, Search, X, FolderOpen } from "lucide-react";
 import { Shell, PageHeading } from "@/components/luedal-shell";
 import { Button } from "@/components/ui/button";
 import { useCareer } from "@/lib/career-context";
-import { skills, analyze, levels, meta, type Skill } from "@/lib/career";
+import { analyze, levels, meta, type Skill } from "@/lib/career";
 export const Route = createFileRoute("/_authenticated/competencias")({
   head: () =>
     meta(
       "Competências e Skill Graph",
-      "Explore competências Backend Node.js, suas relações e suas evidências.",
+      "Explore suas competências, relações e evidências profissionais.",
     ),
   component: SkillsPage,
 });
 function SkillsPage() {
-  const { data, update } = useCareer();
+  const { data, update, catalog } = useCareer();
+  const skills = profileSkills(data, catalog);
   const [view, setView] = useState("categories");
   const [category, setCategory] = useState("Todas");
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Skill | null>(null);
-  const a = analyze(data);
+  const a = analyze(data, catalog);
   const categories = [...new Set(skills.map((s) => s.category))];
   const filtered = skills.filter(
     (s) =>
@@ -88,7 +90,7 @@ function SkillsPage() {
             />
           </div>
         </div>
-        {view === "graph" ? (
+        {view === "graph" && !a.supported ? <div className="empty-state">{limitedMappingMessage}</div> : view === "graph" ? (
           <div className="graph-container">
             <ReactFlow
               nodes={nodes.filter((n) => filtered.some((s) => s.id === n.id))}
@@ -162,8 +164,7 @@ function SkillsPage() {
             </div>
             <span className="tag tag-purple">{selected.category}</span>
             <p className="text-sm leading-7 muted mt-5">
-              Competência relevante para desenvolver APIs e serviços Backend Júnior com Node.js /
-              TypeScript.
+              Competência do catálogo ou registrada por você; sua declaração não equivale à validação técnica.
             </p>
             <h3 className="panel-title mt-6">Pré-requisitos</h3>
             <div className="flex flex-wrap gap-2 mt-3">

@@ -1,3 +1,5 @@
+import { CareerGoalPicker } from "@/components/career-goal-picker";
+import { limitedMappingMessage } from "@/lib/career-catalog";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Save, ArrowRight, Target } from "lucide-react";
 import { useState } from "react";
@@ -19,12 +21,13 @@ const situations = [
   "Em transição de carreira",
 ];
 function Profile() {
-  const { data, update } = useCareer();
+  const { data, update, catalog } = useCareer();
+  const [goalForm, setGoalForm] = useState(data);
   const [name, setName] = useState(data.name);
   const [situation, setSituation] = useState(data.situation);
   const [learning, setLearning] = useState(data.learning);
   const [busy, setBusy] = useState(false);
-  const a = analyze(data);
+  const a = analyze(data, catalog);
   return (
     <Shell title="Perfil profissional">
       <main className="page">
@@ -38,7 +41,7 @@ function Profile() {
             onSubmit={async (e) => {
               e.preventDefault();
               setBusy(true);
-              if (await update({ ...data, name, situation, learning }))
+              if (await update({ ...goalForm, name, situation, learning }))
                 toast.success("Perfil salvo. Sua rota foi recalculada.");
               setBusy(false);
             }}
@@ -83,6 +86,7 @@ function Profile() {
                 ))}
               </select>
             </div>
+            <CareerGoalPicker value={goalForm} catalog={catalog} onChange={setGoalForm} />
             <Button disabled={busy}>
               <Save />
               {busy ? "Salvando…" : "Salvar alterações"}
@@ -96,10 +100,10 @@ function Profile() {
               </h2>
               <h3 className="text-xl font-semibold mt-5">{data.goal}</h3>
               <p className="muted text-xs mt-3 leading-7">
-                Node.js / TypeScript · Objetivo suportado no beta.
+                {a.supported ? "Objetivo com mapeamento estruturado." : "Mapeamento em expansão."}
               </p>
               <p className="muted text-xs mt-5 leading-7">
-                Frontend, Full Stack, DevOps e outras especializações estão em desenvolvimento.
+                {!a.supported ? limitedMappingMessage : "Sua rota acompanha o objetivo salvo no perfil."}
               </p>
             </section>
             <section className="panel panel-pad mt-5">

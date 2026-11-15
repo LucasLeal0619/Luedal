@@ -1,10 +1,11 @@
+import { profileSkills, limitedMappingMessage } from "@/lib/career-catalog";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowRight, RefreshCw, Plus, Check, CircleHelp } from "lucide-react";
 import { Shell, PageHeading } from "@/components/luedal-shell";
 import { EvidenceForm } from "@/components/evidence-form";
 import { Button } from "@/components/ui/button";
-import { analyze, explain, skills, meta } from "@/lib/career";
+import { analyze, explain, meta } from "@/lib/career";
 import { useCareer } from "@/lib/career-context";
 import { toast } from "sonner";
 export const Route = createFileRoute("/_authenticated/minha-rota")({
@@ -16,15 +17,16 @@ export const Route = createFileRoute("/_authenticated/minha-rota")({
   component: CareerRoute,
 });
 function CareerRoute() {
-  const { data, update } = useCareer();
-  const a = analyze(data);
+  const { data, update, catalog } = useCareer();
+  const skills = profileSkills(data, catalog);
+  const a = analyze(data, catalog);
   const [add, setAdd] = useState(false);
   return (
     <Shell title="Minha Rota">
       <main className="page">
         <PageHeading
           title="Sua evolução tem uma direção"
-          description={`${data.goal} · Node.js / TypeScript`}
+          description={data.goal}
         >
           <Button
             variant="outline"
@@ -58,7 +60,7 @@ function CareerRoute() {
                     : "Consolidar pré-requisitos"}
               </span>
               <h2>{s.name}</h2>
-              <p>{explain(s, data)}</p>
+              <p>{explain(s, data, catalog)}</p>
               <div className="route-detail">
                 <div>
                   <h3>O QUE FAZER</h3>
@@ -138,7 +140,7 @@ function CareerRoute() {
         )}
         {!a.recommendations.length && (
           <div className="panel empty-state">
-            Todas as atividades disponíveis foram concluídas. Continue registrando evidências.
+            {!a.supported ? limitedMappingMessage : !a.hasData ? "Adicione competências e experiências para iniciar seu diagnóstico." : "Todas as atividades disponíveis foram concluídas. Continue registrando evidências."}
           </div>
         )}
       </main>

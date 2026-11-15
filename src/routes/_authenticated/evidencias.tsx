@@ -1,3 +1,4 @@
+import { profileSkills, limitedMappingMessage } from "@/lib/career-catalog";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Plus, Code2, Pencil, Trash2, ExternalLink } from "lucide-react";
@@ -5,7 +6,7 @@ import { Shell, PageHeading } from "@/components/luedal-shell";
 import { EvidenceForm } from "@/components/evidence-form";
 import { Button } from "@/components/ui/button";
 import { useCareer } from "@/lib/career-context";
-import { skills, meta, type Evidence } from "@/lib/career";
+import { meta, type Evidence } from "@/lib/career";
 import { toast } from "sonner";
 export const Route = createFileRoute("/_authenticated/evidencias")({
   head: () =>
@@ -16,7 +17,8 @@ export const Route = createFileRoute("/_authenticated/evidencias")({
   component: Evidences,
 });
 function Evidences() {
-  const { data, update } = useCareer();
+  const { data, update, catalog } = useCareer();
+  const skills = profileSkills(data, catalog);
   const [add, setAdd] = useState(false);
   const [editing, setEditing] = useState<Evidence | undefined>();
   const [deleting, setDeleting] = useState<string | null>(null);

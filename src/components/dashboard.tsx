@@ -1,3 +1,4 @@
+import { limitedMappingMessage, selectedGoal } from "@/lib/career-catalog";
 import { Link } from "@tanstack/react-router";
 import {
   Target,
@@ -22,8 +23,8 @@ import { useAssistant } from "./conversational-assistant";
 import { useCareer } from "@/lib/career-context";
 import { analyze } from "@/lib/career";
 export function Dashboard() {
-  const { data } = useCareer();
-  const analysis = analyze(data);
+  const { data, catalog } = useCareer();
+  const analysis = analyze(data, catalog);
   const next = analysis.recommendations[0];
   const {open: openAssistant} = useAssistant();
   return (
@@ -47,9 +48,8 @@ export function Dashboard() {
             <p>Construindo uma base sólida para sua próxima oportunidade.</p>
           </div>
           <div className="goal-tags">
-            <span className="tag">Node.js</span>
-            <span className="tag">TypeScript</span>
-            <span className="tag tag-purple">Objetivo do beta</span>
+            <span className="tag">{catalog.areas.find(a => a.id === data.areaId)?.name || "Objetivo personalizado"}</span>
+            {data.seniority && <span className="tag">{data.seniority}</span>}
           </div>
           <Link to="/perfil" className="text-link ml-4">
             Ver objetivo <ChevronRight size={13} />
@@ -213,61 +213,8 @@ export function Dashboard() {
                 </Link>
               </div>
               <p className="text-[10px] muted">Conecte o que você sabe ao que vem a seguir.</p>
-              <div className="skill-preview">
-                <svg
-                  viewBox="0 0 320 245"
-                  role="img"
-                  aria-label="Relações entre JavaScript, Node.js, TypeScript, APIs REST e testes"
-                >
-                  <line x1="160" y1="110" x2="83" y2="48" />
-                  <line x1="160" y1="110" x2="250" y2="53" />
-                  <line x1="160" y1="110" x2="66" y2="149" />
-                  <line x1="160" y1="110" x2="242" y2="157" />
-                  <line x1="242" y1="157" x2="161" y2="201" />
-                  <line x1="66" y1="149" x2="161" y2="201" />
-                  {[
-                    [83, 48, "JavaScript"],
-                    [250, 53, "TypeScript"],
-                    [160, 110, "Node.js"],
-                    [66, 149, "APIs REST"],
-                    [242, 157, "PostgreSQL"],
-                    [161, 201, "Testes de integração"],
-                  ].map(([x, y, name]) => (
-                    <g key={name}>
-                      <circle cx={x} cy={y} r={name === "Node.js" ? 25 : 17} />
-                      <text x={x} y={Number(y) + (name === "Node.js" ? 4 : 32)} textAnchor="middle">
-                        {name}
-                      </text>
-                      {analysis.evidenced.has(({ JavaScript: "javascript", TypeScript: "typescript", "Node.js": "node", "APIs REST": "rest", PostgreSQL: "postgres", "Testes de integração": "integration" } as Record<string, string>)[String(name)] ?? "") && (
-                        <circle
-                          cx={Number(x) + 13}
-                          cy={Number(y) - 12}
-                          r="3"
-                          className="fill-success stroke-success"
-                        />
-                      )}
-                    </g>
-                  ))}
-                </svg>
-              </div>
-              <div className="legend">
-                <span>
-                  <i className="dot dot-success" />
-                  Com evidências
-                </span>
-                <span>
-                  <i className="dot" />A explorar
-                </span>
-              </div>
               <div className="skill-mini-list">
-                <div>
-                  <span>Fundamentos & Backend</span>
-                  <span className="tag tag-green">{analysis.mapped.some(s => s.category === "Fundamentos" || s.category === "Backend") ? "Em evolução" : "A mapear"}</span>
-                </div>
-                <div>
-                  <span>Qualidade & Infraestrutura</span>
-                  <span className="tag tag-purple">{next?.category === "Qualidade" || next?.category === "Infraestrutura" ? "Próximo foco" : "A explorar"}</span>
-                </div>
+                {!analysis.supported ? <p className="muted text-xs leading-7">{limitedMappingMessage}</p> : catalog.skills.filter(s => selectedGoal(data,catalog)?.skill_ids.includes(s.id)).slice(0,6).map(s => <div key={s.id}><span>{s.name}</span><span className="tag">{analysis.evidenced.has(s.id)?"Com evidência":"A explorar"}</span></div>)}
               </div>
               <Button asChild variant="outline" className="w-full mt-4 text-xs">
                 <Link to="/competencias">

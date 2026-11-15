@@ -1,3 +1,4 @@
+import { limitedMappingMessage } from "@/lib/career-catalog";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, CircleHelp } from "lucide-react";
 import { Shell, PageHeading } from "@/components/luedal-shell";
@@ -13,8 +14,8 @@ export const Route = createFileRoute("/_authenticated/lacunas")({
   component: Gaps,
 });
 function Gaps() {
-  const { data } = useCareer();
-  const a = analyze(data);
+  const { data, catalog } = useCareer();
+  const a = analyze(data, catalog);
   return (
     <Shell title="Diagnóstico">
       <main className="page">
@@ -40,6 +41,7 @@ function Gaps() {
             </section>
           ))}
         </div>
+        {!a.supported && <p className="muted leading-7 py-5">{limitedMappingMessage}</p>}
         <div className="grid-2">
           {a.gaps.map((s) => (
             <section className="panel panel-pad" key={s.id}>
@@ -52,7 +54,7 @@ function Gaps() {
                   ? "Declarada, sem evidência"
                   : "Ponto a confirmar"}
               </span>
-              <p className="text-xs leading-7 muted mt-4">{explain(s, data)}</p>
+              <p className="text-xs leading-7 muted mt-4">{explain(s, data, catalog)}</p>
             </section>
           ))}
         </div>
