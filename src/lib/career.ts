@@ -101,6 +101,7 @@ export type Evidence = {
   url: string;
   skills: string[];
   contribution: string;
+  details?: Record<string, string>;
 };
 export type CareerData = {
   areaId?: string;
@@ -109,6 +110,8 @@ export type CareerData = {
   seniority?: string;
   onboardingStep?: number;
   customSkills?: Skill[];
+  skillDetails?: Record<string, import("./professional-profile").SkillDetail>;
+  professional?: import("./professional-profile").ProfessionalProfile;
   name: string;
   situation: string;
   goal: string;
@@ -174,17 +177,20 @@ export function analyze(data: CareerData, catalog?: import("./career-catalog").C
     .filter((s) => data.progress[s.id] !== "completed")
     .sort(
       (a, b) =>
+        Number((data.familiarity[a.id] ?? 0) >= 3) - Number((data.familiarity[b.id] ?? 0) >= 3) ||
         Number(ready(b)) - Number(ready(a)) ||
         b.priority - a.priority ||
         allSkills.indexOf(a) - allSkills.indexOf(b),
     );
-  return { evidenced, mapped, gaps, recommendations, ready, supported, hasData };
+  const development = recommendations.filter(s => (data.familiarity[s.id] ?? 0) < 3);
+  const demonstrate = recommendations.filter(s => (data.familiarity[s.id] ?? 0) >= 3);
+  return { evidenced, mapped, gaps, recommendations, development, demonstrate, ready, supported, hasData };
 }
 export function explain(skill: Skill, data: CareerData, catalog?: import("./career-catalog").CareerCatalog) {
   const prerequisites = skill.prerequisites
     .map((id) => (catalog?.skills ?? skills).find((s) => s.id === id)?.name)
     .filter(Boolean);
-  return `Ainda não encontramos evidências suficientes de ${skill.name} no seu perfil. ${prerequisites.length ? `Essa competência se conecta a ${prerequisites.join(" e ")}. ` : ""}Ela faz parte do mapeamento de ${data.goal}. ${analyze(data, catalog).ready(skill) ? "Seus pré-requisitos declarados permitem começar esta atividade." : "Comece pelos pré-requisitos indicados antes de avançar."}`;
+  return `${(data.familiarity[skill.id] ?? 0) >= 3 ? `Você já declarou autonomia em ${skill.name}; não é necessário repetir fundamentos sem justificativa. Documente sua aplicação real.` : `Investigue ou desenvolva ${skill.name} conforme seu nível declarado.`} Ainda não encontramos evidências associadas. ${prerequisites.length ? `Essa competência se conecta a ${prerequisites.join(" e ")}. ` : ""}Ela faz parte do mapeamento de ${data.goal}. Autoavaliação e evidência registrada não são validação técnica.`;
 }
 export function meta(title: string, description: string) {
   return {
