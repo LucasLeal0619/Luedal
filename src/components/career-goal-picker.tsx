@@ -5,10 +5,15 @@ import { chooseGoal, customGoal, selectedGoal, type CareerCatalog } from "@/lib/
 export function CareerGoalPicker({ value, catalog, onChange }: { value: CareerData; catalog: CareerCatalog; onChange: (value: CareerData) => void }) {
   const [query, setQuery] = useState("");
   const goal = selectedGoal(value, catalog);
-  const filtered = catalog.areas.filter(a => `${a.name} ${catalog.goals.filter(g => g.area_id === a.id).map(g => g.title).join(" ")}`.toLocaleLowerCase().includes(query.toLocaleLowerCase()));
+  const normalize = (text: string) => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase();
+  const matches = catalog.goals.filter(g => normalize(`${g.title} ${catalog.areas.find(a => a.id === g.area_id)?.name ?? ""}`).includes(normalize(query.trim())));
   return <div>
     <div className="form-field"><label htmlFor="career-search">Pesquisar área ou cargo</label><input id="career-search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Frontend, IA, arquitetura…" /></div>
-    <div className="form-field"><label htmlFor="career-area">Área profissional</label><select id="career-area" value={value.areaId ?? ""} onChange={e => onChange({ ...value, areaId: e.target.value, goalId: "", goal: "", goalSource: "catalog", seniority: "" })}><option value="">Selecione uma área</option>{filtered.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}</select></div>
+    {query.trim() && <div className="flex flex-col gap-2 mb-4" aria-label="Resultados da pesquisa">
+      {matches.slice(0, 8).map(g => <Button key={g.id} type="button" variant="outline" className="h-auto whitespace-normal justify-start" onClick={() => { onChange(chooseGoal(value, g)); setQuery(""); }}>{g.title}</Button>)}
+      <Button type="button" className="h-auto whitespace-normal justify-start" onClick={() => { onChange(customGoal(value, query.trim())); setQuery(""); }}>Usar {query.trim()} como meu objetivo profissional</Button>
+    </div>}
+    <div className="form-field"><label htmlFor="career-area">Área profissional</label><select id="career-area" value={value.areaId ?? ""} onChange={e => onChange({ ...value, areaId: e.target.value, goalId: "", goal: value.goalSource === "custom" ? value.goal : "", goalSource: value.goalSource === "custom" ? "custom" : "catalog", seniority: "" })}><option value="">Selecione uma área</option>{catalog.areas.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}</select></div>
     {value.areaId && value.goalSource !== "custom" && <>
       <div className="form-field"><label htmlFor="career-role">Cargo ou especialização</label><select id="career-role" value={value.goalId ?? ""} onChange={e => { const next = catalog.goals.find(g => g.id === e.target.value); if(next) onChange(chooseGoal(value, next)); }}><option value="">Selecione um objetivo</option>{catalog.goals.filter(g => g.area_id === value.areaId).map(g => <option key={g.id} value={g.id}>{g.title}</option>)}</select></div>
       {goal?.description && <p className="muted text-xs leading-7">{goal.description}</p>}
