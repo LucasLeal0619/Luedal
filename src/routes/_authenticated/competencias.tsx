@@ -1,4 +1,4 @@
-import { profileSkills, limitedMappingMessage } from "@/lib/career-catalog";
+import { profileSkills, selectedGoal, limitedMappingMessage } from "@/lib/career-catalog";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { ReactFlow, Background, Controls, type Node, type Edge } from "@xyflow/react";
@@ -29,17 +29,19 @@ function SkillsPage() {
       (category === "Todas" || s.category === category) &&
       s.name.toLowerCase().includes(query.toLowerCase()),
   );
-  const nodes: Node[] = skills.map((s, i) => ({
+  const graphSkills = skills.filter(s => selectedGoal(data,catalog)?.skill_ids.includes(s.id));
+  const graphCategories = [...new Set(graphSkills.map(s => s.category))];
+  const nodes: Node[] = graphSkills.map((s, i) => ({
     id: s.id,
     position: {
-      x: categories.indexOf(s.category) * 240,
-      y: (i - skills.findIndex((v) => v.category === s.category)) * 110,
+      x: graphCategories.indexOf(s.category) * 240,
+      y: (i - graphSkills.findIndex((v) => v.category === s.category)) * 110,
     },
     data: { label: s.name },
     className: a.evidenced.has(s.id) ? "evidenced-node" : "",
   }));
-  const edges: Edge[] = skills.flatMap((s) =>
-    s.prerequisites.map((id) => ({
+  const edges: Edge[] = graphSkills.flatMap((s) =>
+    s.prerequisites.filter(id => graphSkills.some(v => v.id === id)).map((id) => ({
       id: `${id}-${s.id}`,
       source: id,
       target: s.id,
