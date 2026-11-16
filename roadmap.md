@@ -1,4 +1,12 @@
 # Luedal SaaS
+## Current correction brief
+- [ ] 1: Selectable area/job search and direct custom-objective selection.
+- [ ] 2: Shared personal competency CRUD, explicit self-assessment and personal React Flow map.
+- [ ] 3: Confirmed persistence, safe form merging and failure-aware save feedback.
+- [ ] 4: Optional complete professional profile with partial saves and completeness indicator.
+- [ ] 5: Individualized GPS separating development from evidence and preliminary guidance.
+- [ ] 6: Domain tests, authenticated readback, integration, isolation and mobile checks.
+
 - [x] Replace fixed onboarding goals with a persistent searchable career catalog and free-text goals.
 - [x] Personalize skill suggestions, save/resume steps and multiple experiences, and allow later goal edits.
 - [x] Align dashboard, profile, Skill Graph and GPS with selected mappings; verify new-account persistence and isolation.
